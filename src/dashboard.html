@@ -563,6 +563,73 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
   .savebar.show { transform: none; }
   .savebar > span { margin-right: auto; }
 }
+/* ───── téléphone : cibles ≥ 44 px, textes ≥ 14 px ───── */
+.sb-close { display: none; width: 44px; height: 44px; place-items: center; margin-right: -10px; border-radius: 10px; color: var(--mut); }
+.sb-close:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+@media (max-width: 768px) {
+  .sb { padding-top: max(16px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom)); width: min(290px, 86vw); }
+  .sb-close { display: grid; }
+  .sb-top { padding: 0 6px 16px; }
+  .logo { min-height: 44px; }
+  .nav-ind { height: 46px; }
+  .nav-i { height: 46px; font-size: 15px; }
+  .sb-user { font-size: 14px; }
+  .powered, .powered b { font-size: 14px; }
+  .top { padding-top: max(10px, env(safe-area-inset-top)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .burger { width: 44px; height: 44px; }
+  .logout-top { width: 44px; height: 44px; padding: 0; }
+  .mode { height: 30px; font-size: 14px; }
+  .pill { height: 44px; padding: 0 6px; font-size: 14px; white-space: nowrap; }
+  .srow { flex-wrap: wrap; }
+  .srow > div:first-child { flex: 1 1 180px; }
+  .pill-ind { height: 44px; }
+  .btn, .btn-sm { min-height: 44px; font-size: 15px; }
+  .banner { font-size: 14px; }
+  .input { height: 48px; font-size: 16px; }
+  select.input { height: 46px; }
+  .field > span, .err, .note, .brand p { font-size: 14px; }
+  .empty, .ch-s, .kpi-h, .kpi-d, .tip, .toast, .modal p { font-size: 14px; }
+  .ax { font-size: 14px; }
+  .badge { height: 30px; font-size: 14px; }
+  .tag { font-size: 14px; padding: 1px 7px; }
+  .lg { height: 44px; font-size: 14px; }
+  .donut-c span, .dl-r, .dev-n, td, .ref-h, .ref-h .mut, .hm-legend, .pager, .foot-note, .sec-d, .srow-d, .lk-c span, .pv-cap { font-size: 14px; }
+  .srow-t { font-size: 15px; }
+  .hm { font-size: 14px; }
+  .toolbar { width: 100%; }
+  .toolbar select { flex: 1 1 140px; min-width: 0; }
+  th { font-size: 14px; padding-bottom: 0; }
+  th button { min-height: 44px; }
+  .c-opt, .c-host { display: none; }
+  .tbl-wrap table { min-width: 0; }
+  th, td { padding-left: 8px; padding-right: 8px; }
+  th:first-child, td:first-child { padding-left: 20px; }
+  th:last-child, td:last-child { padding-right: 20px; }
+  td { padding-top: 12px; padding-bottom: 12px; white-space: normal; }
+  td .tag { margin-left: 0; margin-top: 4px; display: table; }
+  .badge { padding: 0 8px; }
+  .sec-h { flex-wrap: wrap; }
+  .sec-h > div { flex: 1 1 200px; }
+  .view { padding-bottom: calc(150px + env(safe-area-inset-bottom)); }
+  .pager .btn { min-width: 44px; }
+  .lk-u { min-height: 44px; font-size: 14px; }
+  .lk-a .btn { width: 44px; }
+  .sw, .sw[aria-checked="true"] { width: 46px; height: 44px; background: none; }
+  .sw::before { content: ''; position: absolute; left: 2px; right: 2px; top: 10px; bottom: 10px; border-radius: 99px; background: rgba(255, 255, 255, .14); transition: background-color .25s ease; }
+  .sw[aria-checked="true"]::before { background: linear-gradient(135deg, var(--pink), var(--rose)); }
+  .sw::after { top: 13px; left: 5px; }
+  .swatch { width: 44px; height: 44px; }
+  .segc button { height: 44px; font-size: 14px; }
+  .data-row { flex-direction: column; }
+  .data-row .btn { width: 100%; height: 48px; }
+  .pv-col { margin-top: 4px; }
+  .modal { padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom)); }
+  .modal-a .btn { flex: 1; }
+  .toasts { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .savebar { flex-wrap: wrap; bottom: max(16px, env(safe-area-inset-bottom)); padding: 12px; gap: 10px; font-size: 14px; }
+  .savebar > span { flex-basis: 100%; margin: 0 0 2px 4px; white-space: normal; }
+  .savebar .btn { flex: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
 }
@@ -593,6 +660,7 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
     <div class="sb-top">
       <a class="logo" href="#/overview" aria-label="Rise Agency — Overview"><img class="logo-mark" src="__RISE_MARK__" alt="" width="40" height="32"><span class="logo-t">Rise <em>Agency</em></span></a>
       <button class="sb-tog" id="sb-tog" type="button" aria-label="Déplier le menu"><svg class="ic" viewBox="0 0 24 24"><path d="M3 4h18v16H3zM9 4v16"/></svg></button>
+      <button class="sb-close" id="sb-close" type="button" aria-label="Fermer le menu"><svg class="ic" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <nav class="nav" id="nav">
       <span class="nav-ind" id="nav-ind"></span>
@@ -1360,7 +1428,7 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
     const refsPresent = [...new Set(clicks.map(e => e.referrer || 'direct'))].sort((a, b) => ((REF[a] || REF.other).label).localeCompare((REF[b] || REF.other).label));
     if (A.ref !== 'all' && !refsPresent.includes(A.ref)) A.ref = 'all';
     const sel = (key, label, opts) => `<select class="input" data-f="${key}" aria-label="${esc(label)}">${opts.map(([val, txt]) => `<option value="${esc(val)}"${A[key] === val ? ' selected' : ''}>${esc(txt)}</option>`).join('')}</select>`;
-    const th = (col, label) => `<th><button type="button" data-s="${col}" class="${A.sort === col ? `on ${A.dir}` : ''}">${esc(label)}${ic('chevron')}</button></th>`;
+    const th = (col, label, cls = '') => `<th class="${cls}"><button type="button" data-s="${col}" class="${A.sort === col ? `on ${A.dir}` : ''}">${esc(label)}${ic('chevron')}</button></th>`;
     v.innerHTML = `
       <div class="card enter" style="--k:0">
         <div class="ch-h">
@@ -1372,7 +1440,7 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
           </div>
         </div>
         <div class="tbl-wrap"><table>
-          <thead><tr>${th('t', 'Date / heure')}${th('link', 'Lien cliqué')}${th('referrer', 'Source')}${th('device', 'Appareil')}${th('country', 'Pays')}</tr></thead>
+          <thead><tr>${th('t', 'Date / heure')}${th('link', 'Lien cliqué')}${th('referrer', 'Source')}${th('device', 'Appareil', 'c-opt')}${th('country', 'Pays', 'c-opt')}</tr></thead>
           <tbody id="tbody"></tbody>
         </table></div>
         <div class="pager" id="pager"></div>
@@ -1410,9 +1478,9 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
         return `<tr>
           <td>${esc(dfStamp.format(e.t))}${e.is_demo ? '<span class="tag">démo</span>' : ''}</td>
           <td><span class="badge" style="--c:${c}">${esc(l.label)}</span></td>
-          <td>${esc(ref.label)} ${e.ref_host && e.ref_host !== 'direct' ? `<span class="mut">· ${esc(e.ref_host)}</span>` : ''}</td>
-          <td><span class="cell-dev">${ic(e.device === 'mobile' ? 'mobile' : 'desktop')}${e.device === 'mobile' ? 'Mobile' : 'Desktop'}</span></td>
-          <td>${e.country ? esc(region(e.country)) : '<span class="mut">—</span>'}</td>
+          <td>${esc(ref.label)} ${e.ref_host && e.ref_host !== 'direct' ? `<span class="mut c-host">· ${esc(e.ref_host)}</span>` : ''}</td>
+          <td class="c-opt"><span class="cell-dev">${ic(e.device === 'mobile' ? 'mobile' : 'desktop')}${e.device === 'mobile' ? 'Mobile' : 'Desktop'}</span></td>
+          <td class="c-opt">${e.country ? esc(region(e.country)) : '<span class="mut">—</span>'}</td>
         </tr>`;
       }).join('') : '<tr><td colspan="5"><div class="empty">Aucun clic pour ces filtres</div></td></tr>';
       $('#pager', v).innerHTML = `<span>${rows.length ? `${fmt(A.pg * PAGE + 1)}–${fmt(Math.min(rows.length, (A.pg + 1) * PAGE))} sur ${fmt(rows.length)}` : ''}</span>
@@ -1559,13 +1627,12 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
     const previewUrl = new URL('../?preview=1', location.href).href;
     const demoCount = state.events.filter(e => e.is_demo).length;
     const clickCount = state.events.filter(e => e.type === 'click').length;
-    const wide = matchMedia('(min-width: 1241px)').matches;
     v.innerHTML = `
-      <div class="set${wide ? '' : ' nopv'}" id="set">
+      <div class="set" id="set">
         <div class="stack">
           <section class="card enter" style="--k:0">
             <div class="sec-h"><div><h3>Landing page</h3><div class="sec-d">Textes affichés sous la photo principale</div></div>
-              <button class="btn btn-ghost btn-sm" type="button" id="pv-toggle">${ic('eye')}<span class="t">${wide ? "Masquer l'aperçu" : 'Aperçu'}</span></button></div>
+              <button class="btn btn-ghost btn-sm" type="button" id="pv-toggle">${ic('eye')}<span class="t">Masquer l'aperçu</span></button></div>
             <div class="frow">
               <label class="field"><span>Nom affiché</span><input class="input" data-f="name" maxlength="40" value="${esc(D.name)}"></label>
               <label class="field"><span>Bio</span><input class="input" data-f="handle" maxlength="60" value="${esc(D.handle)}"></label>
@@ -1985,6 +2052,7 @@ tbody tr:hover { background: rgba(255, 255, 255, .04); }
   $('#burger').addEventListener('click', () => app.classList.add('sb-open'));
   $('#sb-tog').addEventListener('click', () => app.classList.toggle('sb-open'));
   $('#scrim').addEventListener('click', () => app.classList.remove('sb-open'));
+  $('#sb-close').addEventListener('click', () => app.classList.remove('sb-open'));
   $('#logout-sb').addEventListener('click', logout);
   $('#logout-top').addEventListener('click', logout);
   addEventListener('hashchange', () => { if (!app.hidden) route(); });

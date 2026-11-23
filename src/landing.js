@@ -334,7 +334,7 @@
   document.getElementById('immersive-photo').style.backgroundImage = `url("${heroImg.src}")`;
   const assets = Promise.all([
     document.fonts ? document.fonts.ready : null,
-    heroImg.decode ? heroImg.decode().catch(() => {}) : null,
+    ...[...document.querySelectorAll('.hero-img, .card > img')].map(img => (img.decode ? img.decode().catch(() => {}) : null)),
     remote
   ]);
   Promise.race([assets, new Promise(r => setTimeout(r, REMOTE && !cached && !PREVIEW ? 1500 : 700))])
