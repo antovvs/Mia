@@ -59,6 +59,11 @@ def build():
     print(f"index.html: {out.stat().st_size // 1024} KB")
 
     dash = (SRC / "dashboard.html").read_text(encoding="utf-8")
+    for token, name, mime in (("__RISE_MARK__", "rise-mark.png", "image/png"),
+                              ("__RISE_METAL__", "rise-metal.webp", "image/webp"),
+                              ("__RISE_ICON__", "rise-icon.png", "image/png")):
+        raw = (ASSETS / name).read_bytes()
+        dash = dash.replace(token, f"data:{mime};base64," + base64.b64encode(raw).decode("ascii"))
     out = ROOT / "dashboard" / "index.html"
     out.parent.mkdir(exist_ok=True)
     out.write_text(fill(dash, url, key), encoding="utf-8")
