@@ -24,6 +24,8 @@ def supabase_config():
         raise SystemExit(f"supabase_url invalide : {url!r}")
     if key and not re.fullmatch(r"[A-Za-z0-9._-]+", key):
         raise SystemExit("supabase_anon_key invalide")
+    if key.startswith("sb_secret_"):
+        raise SystemExit("Clé secrète refusée : seule la clé publishable / anon peut aller dans le site.")
     if key.count(".") == 2:
         try:
             payload = key.split(".")[1]

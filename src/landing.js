@@ -73,7 +73,7 @@
       fetch(`${SB_URL}/rest/v1/events`, {
         method: 'POST',
         keepalive: true,
-        headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        headers: { apikey: SB_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
       }).catch(() => {});
       return;
@@ -148,7 +148,7 @@
       const db = ls.get(LOCAL_KEY, {});
       return { settings: db.settings, links: db.links };
     }
-    const h = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` };
+    const h = { apikey: SB_KEY };
     const [s, l] = await Promise.all([
       fetch(`${SB_URL}/rest/v1/settings?id=eq.1&select=data`, { headers: h }).then(r => (r.ok ? r.json() : [])),
       fetch(`${SB_URL}/rest/v1/links?select=key,url,enabled`, { headers: h }).then(r => (r.ok ? r.json() : []))

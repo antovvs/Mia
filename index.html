@@ -744,8 +744,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
 <script>
 (() => {
   const root = document.documentElement;
-  const SB_URL = ''.replace(/\/+$/, '');
-  const SB_KEY = '';
+  const SB_URL = 'https://yhswqcupdvlsmhiounyf.supabase.co'.replace(/\/+$/, '');
+  const SB_KEY = 'sb_publishable_56Zz1VCK5z0mMWYQrxG5mw_2cP_IpkT';
   const REMOTE = /^https:\/\//.test(SB_URL) && SB_KEY.length > 20;
   const params = new URLSearchParams(location.search);
   const PREVIEW = params.get('preview') === '1';
@@ -817,7 +817,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
       fetch(`${SB_URL}/rest/v1/events`, {
         method: 'POST',
         keepalive: true,
-        headers: { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        headers: { apikey: SB_KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
         body: JSON.stringify(row)
       }).catch(() => {});
       return;
@@ -892,7 +892,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
       const db = ls.get(LOCAL_KEY, {});
       return { settings: db.settings, links: db.links };
     }
-    const h = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}` };
+    const h = { apikey: SB_KEY };
     const [s, l] = await Promise.all([
       fetch(`${SB_URL}/rest/v1/settings?id=eq.1&select=data`, { headers: h }).then(r => (r.ok ? r.json() : [])),
       fetch(`${SB_URL}/rest/v1/links?select=key,url,enabled`, { headers: h }).then(r => (r.ok ? r.json() : []))
