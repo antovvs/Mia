@@ -1,0 +1,2006 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mia 🍓 Analytics</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🍓%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --card: #111111;
+  --line: rgba(255, 255, 255, .06);
+  --line2: rgba(255, 255, 255, .1);
+  --text: #ededef;
+  --mut: #8b8b93;
+  --mut2: #5c5c64;
+  --pink: #ff6b9d;
+  --rose: #c44569;
+  --pink-rgb: 255 107 157;
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --red: #f43f5e;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
+  --display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sbw: 240px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+button, input, select { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+svg { display: block; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid rgb(var(--pink-rgb) / .7); outline-offset: 2px; }
+.ic { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mut { color: var(--mut); }
+
+/* ───── boutons & champs ───── */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform .18s var(--ease), filter .18s ease, background-color .2s ease, border-color .2s ease;
+}
+.btn:hover { transform: scale(1.02); filter: brightness(1.12); }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .45; pointer-events: none; }
+.btn-primary { color: #fff; background: linear-gradient(135deg, var(--pink), var(--rose)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 8px 22px -10px rgb(var(--pink-rgb) / .7); }
+.btn-ghost { background: rgba(255, 255, 255, .04); border: 1px solid var(--line2); }
+.btn-danger { color: #fff; background: linear-gradient(135deg, #f43f5e, #be123c); }
+.btn-sm { height: 32px; padding: 0 11px; font-size: 12.5px; border-radius: 9px; }
+.btn-block { width: 100%; height: 44px; }
+.btn .spin { display: none; width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .3); border-top-color: #fff; animation: spin .7s linear infinite; }
+.btn.loading { pointer-events: none; }
+.btn.loading .spin { display: block; }
+.btn.loading .ic { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.field { display: block; margin-top: 14px; }
+.field > span { display: block; margin-bottom: 6px; font-size: 12.5px; font-weight: 500; color: var(--mut); }
+.input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  border: 1px solid var(--line2);
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.input:hover { background: rgba(255, 255, 255, .05); }
+.input:focus { border-color: rgb(var(--pink-rgb) / .6); box-shadow: 0 0 0 3px rgb(var(--pink-rgb) / .14); }
+.input.bad { border-color: rgba(244, 63, 94, .7); }
+select.input {
+  appearance: none;
+  height: 36px;
+  padding-right: 32px;
+  font-size: 13px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8b93' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+}
+select.input option { background: #161618; }
+.err { min-height: 18px; margin-top: 10px; font-size: 12.5px; color: #fb7185; }
+
+/* ───── login ───── */
+.login { position: fixed; inset: 0; display: grid; place-items: center; padding: 20px; overflow: hidden; }
+.login-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(520px 380px at 28% 22%, rgb(var(--pink-rgb) / .16), transparent 70%),
+    radial-gradient(480px 380px at 76% 80%, rgba(59, 130, 246, .12), transparent 70%);
+}
+.login-card {
+  position: relative;
+  width: min(400px, 100%);
+  padding: 32px 28px 26px;
+  border-radius: 20px;
+  background: rgba(22, 22, 25, .55);
+  border: 1px solid var(--line2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  backdrop-filter: blur(24px) saturate(1.3);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .06);
+  animation: loginIn .6s var(--ease) both;
+}
+.login-card.shake { animation: shake .42s cubic-bezier(.36, .07, .19, .97) both; }
+@keyframes loginIn { from { opacity: 0; transform: scale(.94) translateY(10px); } }
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; font-size: 21px; background: linear-gradient(135deg, var(--pink), var(--rose)); box-shadow: 0 8px 22px -8px rgb(var(--pink-rgb) / .7); }
+.brand h1 { font-family: var(--display); font-size: 19px; font-weight: 800; letter-spacing: -.02em; }
+.brand p { font-size: 13px; color: var(--mut); }
+.note { margin-top: 16px; padding: 12px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; color: #d4d4d8; background: rgba(255, 255, 255, .04); border: 1px solid var(--line2); }
+.note code { font-size: 12px; color: var(--pink); }
+.login .btn-block { margin-top: 6px; }
+
+/* ───── layout ───── */
+.sb {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 30;
+  width: var(--sbw);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 12px 16px;
+  background: #0c0c0d;
+  border-right: 1px solid var(--line);
+  transition: width .3s var(--ease), transform .3s var(--ease), box-shadow .3s ease;
+}
+.sb-top { display: flex; align-items: center; justify-content: space-between; padding: 2px 6px 20px; }
+.logo { display: flex; align-items: center; gap: 10px; min-width: 0; font-family: var(--display); font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
+.logo-mark { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border-radius: 10px; font-size: 16px; background: linear-gradient(135deg, var(--pink), var(--rose)); box-shadow: 0 6px 16px -6px rgb(var(--pink-rgb) / .7); }
+.logo em { font-style: normal; font-weight: 600; color: var(--mut); }
+.sb-tog { display: none; width: 32px; height: 32px; place-items: center; border-radius: 8px; color: var(--mut); }
+.sb-tog:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+.nav { position: relative; display: flex; flex-direction: column; gap: 2px; }
+.nav-ind {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .065);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .38s var(--spring), opacity .2s ease;
+}
+.nav-ind::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 0 3px 3px 0; background: linear-gradient(var(--pink), var(--rose)); }
+.nav-i {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--mut);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+.nav-i::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, .04);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .3s var(--ease);
+}
+.nav-i:hover::before { transform: scaleX(1); }
+.nav-i:hover, .nav-i.on { color: var(--text); }
+.nav-i .lbl { transition: opacity .2s ease; }
+.sb-bottom { margin-top: auto; display: flex; flex-direction: column; gap: 2px; padding-top: 12px; border-top: 1px solid var(--line); }
+.sb-user { padding: 10px 12px 0; font-size: 12px; color: var(--mut2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .2s ease; }
+.scrim { position: fixed; inset: 0; z-index: 25; background: rgba(0, 0, 0, .55); opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility 0s .25s; }
+.main { margin-left: var(--sbw); min-width: 0; transition: margin-left .3s var(--ease); }
+
+.top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-height: 64px;
+  padding: 12px 28px;
+  background: rgba(10, 10, 10, .78);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+}
+.burger { display: none; width: 36px; height: 36px; place-items: center; margin-left: -6px; border-radius: 9px; }
+.burger:hover { background: rgba(255, 255, 255, .05); }
+.top-t { font-family: var(--display); font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
+.pills { position: relative; display: flex; margin-left: auto; padding: 3px; border-radius: 11px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); }
+.pill { position: relative; z-index: 1; height: 30px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: var(--mut); transition: color .2s ease; }
+.pill:hover, .pill.on { color: #fff; }
+.pill-ind { position: absolute; top: 3px; left: 0; height: 30px; border-radius: 8px; background: rgba(255, 255, 255, .09); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06); transition: transform .38s var(--spring), width .38s var(--spring); }
+.top-r { display: flex; align-items: center; gap: 10px; }
+.pills + .top-r, .pills[hidden] + .top-r { margin-left: 0; }
+.pills[hidden] + .top-r { margin-left: auto; }
+.mode { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 99px; font-size: 11.5px; font-weight: 600; color: #fbbf24; background: rgba(251, 191, 36, .1); border: 1px solid rgba(251, 191, 36, .25); }
+.banner { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin: 18px 28px 0; padding: 12px 16px; border-radius: 12px; font-size: 13px; background: rgb(var(--pink-rgb) / .07); border: 1px solid rgb(var(--pink-rgb) / .2); }
+.banner b { font-weight: 600; }
+.banner .btn { margin-left: auto; }
+
+.view { max-width: 1360px; padding: 24px 28px 80px; }
+.view.out { opacity: 0; transform: translateX(-10px); transition: opacity .15s ease, transform .15s ease; }
+.view.in { animation: viewIn .2s ease-out; }
+@keyframes viewIn { from { opacity: 0; transform: translateX(14px); } }
+
+/* ───── cartes ───── */
+.grid { display: grid; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.row2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.an-row { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+.card {
+  position: relative;
+  min-width: 0;
+  padding: 20px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  transition: transform .25s var(--ease), border-color .25s ease, box-shadow .25s ease;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--line2); box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .95); }
+.enter { animation: cardIn .55s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 60ms); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(12px); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } }
+.ch-h { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.ch-t { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.ch-s { margin-top: 2px; font-size: 12.5px; color: var(--mut); }
+.empty { display: grid; place-items: center; min-height: 160px; color: var(--mut); font-size: 13px; text-align: center; }
+
+.kpi-h { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--mut); }
+.kpi-ic { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 9px; color: var(--text); background: rgba(255, 255, 255, .05); }
+.kpi.hl .kpi-ic { color: #fff; background: linear-gradient(135deg, var(--pink), var(--rose)); box-shadow: 0 6px 16px -6px rgb(var(--pink-rgb) / .7); }
+.kpi.hl { background: linear-gradient(180deg, rgb(var(--pink-rgb) / .06), transparent 60%), var(--card); }
+.kpi-v { display: flex; align-items: baseline; gap: 8px; min-width: 0; margin-top: 16px; font-family: var(--display); font-size: 30px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi-src { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 24px; }
+.kpi-pct { font-size: 18px; color: var(--mut); font-weight: 700; }
+.kpi-d { display: flex; align-items: center; gap: 6px; margin-top: 9px; font-size: 12.5px; font-weight: 600; animation: fadeUp .4s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 60ms + 300ms); }
+.kpi-d span { color: var(--mut2); font-weight: 500; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.flat { color: var(--mut); }
+
+/* ───── graphiques ───── */
+.chart { position: relative; height: 300px; }
+.chart svg { overflow: visible; }
+.gl { stroke: rgba(255, 255, 255, .05); }
+.ax { fill: var(--mut2); font: 11px var(--sans); }
+.ln { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: opacity .2s ease; }
+.ln-glow { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; opacity: .13; }
+.xh { stroke: rgba(255, 255, 255, .22); stroke-dasharray: 3 4; opacity: 0; transition: opacity .1s ease; }
+.hit { fill: transparent; cursor: crosshair; }
+.pt { stroke: #111; stroke-width: 2; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px; }
+.lg { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line); font-size: 12.5px; font-weight: 500; transition: opacity .2s ease, background-color .2s ease, border-color .2s ease; }
+.lg:hover { background: rgba(255, 255, 255, .04); border-color: var(--line2); }
+.lg.off { opacity: .38; }
+.lg i, .dot { width: 8px; height: 8px; flex: none; border-radius: 50%; }
+.lg b { color: var(--mut); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.tip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  min-width: 160px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  pointer-events: none;
+  font-size: 12.5px;
+  background: rgba(22, 22, 24, .96);
+  border: 1px solid var(--line2);
+  box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .85);
+  opacity: 0;
+  transition: opacity .1s ease;
+}
+.tip.show { opacity: 1; }
+.tip-t { margin-bottom: 7px; font-size: 11.5px; color: var(--mut); }
+.tip-r { display: flex; align-items: center; gap: 8px; line-height: 1.8; }
+.tip-r b { margin-left: auto; padding-left: 14px; font-variant-numeric: tabular-nums; }
+
+.donut-wrap { display: flex; align-items: center; gap: 28px; }
+.donut { position: relative; width: 196px; height: 196px; flex: none; }
+.donut svg { width: 100%; height: 100%; overflow: visible; }
+.seg { cursor: pointer; transition: transform .28s var(--ease), opacity .2s ease; }
+.donut-c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.donut-c b { display: block; font-family: var(--display); font-size: 28px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.donut-c span { font-size: 12px; color: var(--mut); }
+.dl { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 11px; }
+.dl-r { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.dl-r i { width: 9px; height: 9px; flex: none; border-radius: 3px; }
+.dl-r b { margin-left: auto; font-weight: 600; font-variant-numeric: tabular-nums; }
+.dl-r em { width: 54px; font-style: normal; text-align: right; color: var(--mut); font-variant-numeric: tabular-nums; }
+
+.dev { display: flex; flex-direction: column; gap: 24px; padding-top: 6px; }
+.dev-h { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.dev-ic { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: rgba(255, 255, 255, .05); }
+.dev-p { margin-left: auto; font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.dev-n { margin-top: 2px; font-size: 12.5px; color: var(--mut); }
+.track { height: 10px; margin-top: 10px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .05); }
+.fill { height: 100%; border-radius: inherit; transform: scaleX(0); transform-origin: left; transition: transform 1s var(--ease); }
+
+/* ───── analytics ───── */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; }
+.toolbar select { width: auto; min-width: 150px; }
+.tbl-wrap { margin: 0 -20px; overflow-x: auto; }
+table { width: 100%; min-width: 660px; border-collapse: collapse; font-size: 13px; }
+th { padding: 0 20px 10px; text-align: left; font-size: 12px; font-weight: 600; color: var(--mut); border-bottom: 1px solid var(--line); white-space: nowrap; }
+th button { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: inherit; }
+th button:hover, th button.on { color: var(--text); }
+th button .ic { width: 13px; height: 13px; opacity: 0; transition: opacity .15s ease, transform .2s ease; }
+th button.on .ic { opacity: 1; }
+th button.asc .ic { transform: rotate(180deg); }
+td { padding: 11px 20px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+tbody tr { transition: background-color .15s ease; }
+tbody tr:nth-child(even) { background: rgba(255, 255, 255, .014); }
+tbody tr:hover { background: rgba(255, 255, 255, .04); }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px; border-radius: 7px; font-size: 12px; font-weight: 600; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tag { display: inline-block; margin-left: 8px; padding: 1px 6px; border-radius: 5px; font-size: 10.5px; font-weight: 600; color: var(--mut); background: rgba(255, 255, 255, .06); vertical-align: 1px; }
+.cell-dev { display: inline-flex; align-items: center; gap: 7px; }
+.cell-dev .ic { width: 15px; height: 15px; color: var(--mut); }
+.pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 12.5px; color: var(--mut); }
+.pager div { display: flex; gap: 8px; }
+.hm-scroll { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+.hm { display: grid; grid-template-columns: 34px repeat(24, minmax(14px, 1fr)); gap: 3px; min-width: 520px; font-size: 10.5px; color: var(--mut2); }
+.hm-l { display: flex; align-items: center; }
+.hm-h { text-align: center; }
+.hm-c {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: rgb(var(--pink-rgb) / var(--a));
+  animation: hmIn .45s var(--ease) backwards;
+  animation-delay: calc(var(--x) * 12ms + var(--y) * 22ms);
+  transition: box-shadow .15s ease;
+}
+.hm-c.z { background: rgba(255, 255, 255, .035); }
+.hm-c:hover { box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .7); }
+@keyframes hmIn { from { opacity: 0; transform: scale(.5); } }
+.hm-legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 12px; font-size: 11px; color: var(--mut2); }
+.hm-legend i { width: 12px; height: 12px; border-radius: 3px; background: rgb(var(--pink-rgb) / var(--a)); }
+.refs { display: flex; flex-direction: column; gap: 16px; }
+.ref-h { display: flex; align-items: baseline; gap: 8px; font-size: 13px; }
+.ref-n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.ref-h .mut { margin-left: auto; font-size: 12px; white-space: nowrap; }
+.ref-h b { width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
+.ref .track { height: 6px; margin-top: 7px; }
+
+/* ───── liens ───── */
+.links { display: flex; flex-direction: column; gap: 12px; }
+.lk { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 20px; }
+.lk-ic { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 13px; color: #fff; font-family: var(--display); font-weight: 800; font-size: 14px; letter-spacing: -.02em; transition: opacity .25s ease; }
+.lk-ic svg { width: 21px; height: 21px; fill: currentColor; }
+.lk-n { font-family: var(--display); font-size: 15px; font-weight: 700; transition: opacity .25s ease; }
+.lk-u { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; margin-top: 2px; font-size: 12.5px; color: var(--mut); }
+.lk-u span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lk-u .ic { width: 13px; height: 13px; }
+.lk-u:hover { color: var(--text); }
+.lk-stat { display: flex; align-items: center; gap: 18px; }
+.spark { width: 120px; height: 38px; overflow: visible; }
+.lk-c { min-width: 82px; text-align: right; }
+.lk-c b { display: block; font-family: var(--display); font-size: 19px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.lk-c span { font-size: 11.5px; color: var(--mut); }
+.lk-a { display: flex; align-items: center; gap: 12px; }
+.lk.off .lk-ic, .lk.off .lk-n { opacity: .4; }
+.sw { position: relative; width: 42px; height: 24px; flex: none; border-radius: 99px; background: rgba(255, 255, 255, .14); transition: background-color .25s ease; }
+.sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .4); transition: transform .32s var(--spring); }
+.sw[aria-checked="true"] { background: linear-gradient(135deg, var(--pink), var(--rose)); }
+.sw[aria-checked="true"]::after { transform: translateX(18px); }
+.foot-note { margin-top: 14px; font-size: 12.5px; color: var(--mut2); }
+
+/* ───── réglages ───── */
+.set { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.set.nopv { grid-template-columns: minmax(0, 1fr); }
+.set.nopv .pv-col { display: none; }
+.sec-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sec-h h3, .card h3 { font-family: var(--display); font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.sec-d { margin-top: 3px; font-size: 12.5px; color: var(--mut); }
+.frow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; }
+.srow { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.srow:last-child { border-bottom: 0; padding-bottom: 0; }
+.srow-t { font-weight: 600; font-size: 13.5px; }
+.srow-d { margin-top: 2px; font-size: 12.5px; color: var(--mut); }
+.swatches { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.swatch { position: relative; width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--a), var(--b)); box-shadow: 0 0 0 2px var(--card), 0 0 0 3px transparent; transition: transform .25s var(--spring), box-shadow .2s ease; }
+.swatch:hover { transform: scale(1.1); }
+.swatch.on { box-shadow: 0 0 0 2px var(--card), 0 0 0 4px #fff; }
+.swatch.custom { overflow: hidden; background: conic-gradient(#ff6b9d, #f8b739, #22c55e, #3b82f6, #a855f7, #ff6b9d); cursor: pointer; }
+.swatch.custom input { position: absolute; inset: -6px; width: 44px; height: 44px; opacity: 0; cursor: pointer; }
+.segc { display: inline-flex; padding: 3px; border-radius: 11px; background: rgba(255, 255, 255, .04); border: 1px solid var(--line); }
+.segc button { height: 32px; padding: 0 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; color: var(--mut); transition: color .2s ease, background-color .2s ease; }
+.segc button:hover { color: #fff; }
+.segc button.on { color: #fff; background: rgba(255, 255, 255, .09); }
+.pw { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) auto; gap: 0 12px; align-items: end; }
+.pw .btn { height: 42px; }
+.data-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.pv-col { position: sticky; top: 88px; }
+.phone {
+  position: relative;
+  width: 300px;
+  height: 620px;
+  margin: 0 auto;
+  padding: 12px;
+  border-radius: 46px;
+  background: #18181a;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), inset 0 0 0 2px #2b2b2e, 0 40px 80px -30px rgba(0, 0, 0, .95);
+}
+.phone::before { content: ''; position: absolute; top: 22px; left: 50%; z-index: 2; width: 86px; height: 24px; margin-left: -43px; border-radius: 99px; background: #000; }
+.phone-scr { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 35px; background: #050505; }
+.phone iframe { position: absolute; top: 0; left: 0; width: 390px; height: 844px; border: 0; transform: scale(.7077); transform-origin: 0 0; }
+.pv-cap { margin-top: 14px; font-size: 12px; text-align: center; color: var(--mut2); }
+
+.savebar {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 9px 9px 18px;
+  border-radius: 14px;
+  font-size: 13px;
+  background: rgba(26, 26, 29, .92);
+  border: 1px solid var(--line2);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, .9);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 150%);
+  transition: transform .45s var(--spring), opacity .25s ease;
+}
+.savebar.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.savebar > span { margin-right: 6px; white-space: nowrap; }
+
+/* ───── modal, toasts, squelette ───── */
+.modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(0, 0, 0, .6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility 0s linear .2s; }
+.modal.open { opacity: 1; visibility: visible; transition: opacity .2s ease; }
+.modal-card { width: min(440px, 100%); padding: 22px; border-radius: 18px; background: #141416; border: 1px solid var(--line2); box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .9); transform: scale(.95) translateY(8px); transition: transform .32s var(--spring); }
+.modal.open .modal-card { transform: none; }
+.modal h3 { font-family: var(--display); font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
+.modal p { margin-top: 6px; font-size: 13.5px; color: var(--mut); }
+.modal-a { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.toasts { position: fixed; right: 20px; bottom: 20px; z-index: 130; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 11px 15px; border-radius: 12px; font-size: 13px; font-weight: 500; background: #19191c; border: 1px solid var(--line2); box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .85); animation: toastIn .4s var(--spring) both; }
+.toast i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.toast.err i { background: var(--red); }
+.toast.bye { animation: toastOut .25s ease both; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(12px) scale(.96); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(6px) scale(.97); } }
+.skel { border-radius: 14px; background: #121213; border: 1px solid var(--line); animation: pulse 1.2s ease-in-out infinite alternate; }
+@keyframes pulse { from { opacity: .55; } to { opacity: 1; } }
+
+/* ───── responsive ───── */
+@media (max-width: 1240px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-row { grid-template-columns: minmax(0, 1fr); }
+  .set { grid-template-columns: minmax(0, 1fr); }
+  .pv-col { position: static; }
+}
+@media (max-width: 1100px) and (min-width: 769px) {
+  :root { --sbw: 72px; }
+  .sb-tog { display: grid; }
+  .sb .lbl, .sb .logo-t, .sb-user { opacity: 0; pointer-events: none; }
+  .sb-top { flex-direction: column; gap: 10px; padding-left: 0; padding-right: 0; }
+  .app.sb-open .sb { width: 240px; box-shadow: 30px 0 60px -20px rgba(0, 0, 0, .8); }
+  .app.sb-open .sb .lbl, .app.sb-open .sb .logo-t, .app.sb-open .sb-user { opacity: 1; pointer-events: auto; }
+  .app.sb-open .sb-top { flex-direction: row; padding: 2px 6px 20px; }
+  .app.sb-open .scrim { opacity: 1; visibility: visible; transition: opacity .25s ease; }
+}
+@media (max-width: 900px) {
+  .row2 { grid-template-columns: minmax(0, 1fr); }
+  .frow { grid-template-columns: minmax(0, 1fr); }
+  .lk { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .lk-a { grid-column: 3; grid-row: 1; }
+  .lk-stat { grid-column: 1 / -1; grid-row: 2; justify-content: space-between; }
+}
+@media (max-width: 768px) {
+  :root { --sbw: 0px; }
+  .sb { width: 264px; transform: translateX(-100%); }
+  .app.sb-open .sb { transform: none; box-shadow: 30px 0 60px -20px rgba(0, 0, 0, .8); }
+  .app.sb-open .scrim { opacity: 1; visibility: visible; transition: opacity .25s ease; }
+  .burger { display: grid; }
+  .top { padding: 10px 16px; min-height: 56px; }
+  .top-t { font-size: 18px; }
+  .pills { order: 10; flex-basis: 100%; margin-left: 0; justify-content: space-between; }
+  .pill { flex: 1; }
+  .top-r, .pills + .top-r { margin-left: auto; }
+  .logout-top .lbl { display: none; }
+  .banner { margin: 14px 16px 0; }
+  .view { padding: 16px 16px 90px; }
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .kpi-v { font-size: 28px; }
+  .chart { height: 240px; }
+  .donut-wrap { flex-direction: column; align-items: stretch; }
+  .donut { margin: 0 auto; }
+  .pw { grid-template-columns: minmax(0, 1fr); }
+  .pw .btn { margin-top: 14px; }
+  .lk { gap: 14px; }
+  .lk-a .bt { display: none; }
+  .lk-a .btn { width: 32px; padding: 0; }
+  .toasts { left: 16px; right: 16px; align-items: stretch; }
+  .savebar { left: 16px; right: 16px; transform: translateY(150%); }
+  .savebar.show { transform: none; }
+  .savebar > span { margin-right: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="login" id="login" hidden>
+  <div class="login-bg"></div>
+  <form class="login-card" id="login-form" novalidate>
+    <div class="brand">
+      <span class="brand-mark">🍓</span>
+      <div><h1>Mia 🍓 Analytics</h1><p>Connecte-toi pour voir tes stats</p></div>
+    </div>
+    <div class="note" id="login-note" hidden></div>
+    <div id="login-fields">
+      <label class="field"><span>E-mail</span><input class="input" id="login-email" type="email" autocomplete="username" spellcheck="false" required></label>
+      <label class="field"><span>Mot de passe</span><input class="input" id="login-pass" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="login-err" role="alert"></p>
+      <button class="btn btn-primary btn-block" id="login-btn" type="submit"><span class="spin"></span><span class="t">Se connecter</span></button>
+    </div>
+    <button class="btn btn-primary btn-block" id="login-local" type="button" hidden>Entrer en mode local</button>
+  </form>
+</div>
+
+<div class="app" id="app" hidden>
+  <aside class="sb" id="sb" aria-label="Navigation">
+    <div class="sb-top">
+      <a class="logo" href="#/overview"><span class="logo-mark">🍓</span><span class="logo-t">Mia <em>Analytics</em></span></a>
+      <button class="sb-tog" id="sb-tog" type="button" aria-label="Déplier le menu"><svg class="ic" viewBox="0 0 24 24"><path d="M3 4h18v16H3zM9 4v16"/></svg></button>
+    </div>
+    <nav class="nav" id="nav">
+      <span class="nav-ind" id="nav-ind"></span>
+      <a class="nav-i" href="#/overview" data-page="overview" title="Overview"></a>
+      <a class="nav-i" href="#/analytics" data-page="analytics" title="Analytics"></a>
+      <a class="nav-i" href="#/links" data-page="links" title="Links"></a>
+      <a class="nav-i" href="#/settings" data-page="settings" title="Settings"></a>
+    </nav>
+    <div class="sb-bottom">
+      <a class="nav-i" id="to-landing" href="../" target="_blank" rel="noopener" title="Voir la landing page"></a>
+      <button class="nav-i" id="logout-sb" type="button" title="Se déconnecter"></button>
+      <div class="sb-user" id="sb-user"></div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <header class="top">
+      <button class="burger" id="burger" type="button" aria-label="Ouvrir le menu"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <h1 class="top-t" id="page-title">Dashboard</h1>
+      <div class="pills" id="period" role="tablist" aria-label="Période">
+        <span class="pill-ind" id="pill-ind"></span>
+        <button class="pill" type="button" role="tab" data-p="today">Aujourd'hui</button>
+        <button class="pill" type="button" role="tab" data-p="7d">7 jours</button>
+        <button class="pill" type="button" role="tab" data-p="30d">30 jours</button>
+        <button class="pill" type="button" role="tab" data-p="all">Tout</button>
+      </div>
+      <div class="top-r">
+        <span class="mode" id="mode" hidden>Mode local</span>
+        <button class="btn btn-ghost btn-sm logout-top" id="logout-top" type="button"></button>
+      </div>
+    </header>
+    <div class="banner" id="banner" hidden></div>
+    <main class="view" id="view"></main>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" role="region" aria-label="Modifications non enregistrées">
+  <span>Modifications non enregistrées</span>
+  <button class="btn btn-ghost btn-sm" id="sv-cancel" type="button">Annuler</button>
+  <button class="btn btn-primary btn-sm" id="sv-save" type="button"><span class="spin"></span><span class="t">Enregistrer</span></button>
+</div>
+<div class="modal" id="modal" aria-hidden="true"><div class="modal-card" id="modal-card" role="dialog" aria-modal="true"></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="tip" id="tip"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ───── configuration ───── */
+  const SB_URL = ''.replace(/\/+$/, '');
+  const SB_KEY = '';
+  const REMOTE = /^https:\/\//.test(SB_URL) && SB_KEY.length > 20;
+  const LOCAL_HOST = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  const LS_KEY = 'mia_store';
+  const SESSION_KEY = 'mia_dash_session';
+  const LOCAL_FLAG = 'mia_dash_local';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const LINKS = [
+    { key: 'onlyfans', label: 'OnlyFans', color: '#ff6b9d', url: 'https://onlyfans.com/itsmiaabby' },
+    { key: 'instagram', label: 'Instagram', color: '#E4405F', url: 'https://instagram.com/itsmiaabby' },
+    { key: 'x', label: 'X', color: '#ffffff', url: 'https://x.com/itsmiaabby' },
+    { key: 'reddit', label: 'Reddit', color: '#FF4500', url: 'https://reddit.com/u/itsmiaabby' },
+    { key: 'threads', label: 'Threads', color: '#999999', url: 'https://threads.net/@itsmiaabby' }
+  ];
+  const LINK = Object.fromEntries(LINKS.map(l => [l.key, l]));
+  const REF = {
+    instagram: { label: 'Instagram', color: '#E4405F' },
+    x: { label: 'X / Twitter', color: '#e5e5e5' },
+    reddit: { label: 'Reddit', color: '#FF4500' },
+    threads: { label: 'Threads', color: '#999999' },
+    tiktok: { label: 'TikTok', color: '#25F4EE' },
+    facebook: { label: 'Facebook', color: '#1877F2' },
+    snapchat: { label: 'Snapchat', color: '#FFFC00' },
+    google: { label: 'Google', color: '#34A853' },
+    direct: { label: 'Direct', color: '#3b82f6' },
+    other: { label: 'Autre', color: '#6b7280' }
+  };
+  const ACCENTS = { rose: ['#ff6b9d', '#c44569'], bleu: ['#3b82f6', '#1d4ed8'], violet: ['#a855f7', '#7c3aed'], vert: ['#22c55e', '#15803d'] };
+  const DEFAULT_SETTINGS = { name: 'Mia 🍓', handle: '@itsmiaabby', badge: '10K+ Followers', accent: 'rose', accentPink: '#ff6b9d', accentRose: '#c44569', blocks: 'rounded', gate: true };
+
+  /* ───── utilitaires ───── */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = new Intl.NumberFormat('fr-FR');
+  const fmt = n => nf.format(Math.round(n));
+  const fmtDec = (n, d) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+  const DAY = 864e5;
+  const sod = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const dfShort = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short' });
+  const dfWeek = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric' });
+  const dfLong = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const dfStamp = new Intl.DateTimeFormat('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const region = (() => {
+    try { const dn = new Intl.DisplayNames(['fr'], { type: 'region' }); return c => { try { return dn.of(c); } catch (e) { return c; } }; }
+    catch (e) { return c => c; }
+  })();
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (Math.random() * 16) | 0;
+    return (c === 'x' ? r : (r & 3) | 8).toString(16);
+  }));
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const hexRgb = h => {
+    const m = /^#?([\da-f]{6})$/i.exec(h || '');
+    if (!m) return null;
+    const n = parseInt(m[1], 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const shade = (hex, k) => {
+    const c = hexRgb(hex);
+    if (!c) return hex;
+    return '#' + c.map(v => Math.round(Math.max(0, Math.min(255, k < 0 ? v * (1 + k) : v + (255 - v) * k))).toString(16).padStart(2, '0')).join('');
+  };
+
+  const ICONS = {
+    overview: 'M4 4h6v6H4zM14 4h6v6h-6zM14 14h6v6h-6zM4 14h6v6H4z',
+    analytics: 'M3 3v18h18M7 15l4-4 3 3 5-6',
+    links: 'M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5',
+    settings: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6',
+    external: 'M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6',
+    logout: 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+    cursor: 'M4 4l7 17 2.5-7.5L21 11z',
+    eye: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
+    target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z',
+    globe: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20',
+    mobile: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2',
+    desktop: 'M3 4h18v12H3zM8 20h8M12 16v4',
+    edit: 'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z',
+    download: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+    trash: 'M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6',
+    sparkles: 'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z',
+    chevron: 'M6 9l6 6 6-6',
+    left: 'M15 18l-6-6 6-6',
+    right: 'M9 18l6-6-6-6'
+  };
+  const ic = name => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[name]}"/></svg>`;
+  const BRAND = {
+    onlyfans: '<span>OF</span>',
+    instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.2"/></svg>',
+    x: '<svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>',
+    reddit: '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="13.9" rx="8.6" ry="6.2"/><circle cx="3.5" cy="11.4" r="2.2"/><circle cx="20.5" cy="11.4" r="2.2"/><circle cx="8.9" cy="13.1" r="1.5" fill="#FF4500"/><circle cx="15.1" cy="13.1" r="1.5" fill="#FF4500"/><path d="M8.7 16.5c1.8 1.2 4.8 1.2 6.6 0" fill="none" stroke="#FF4500" stroke-width="1.2" stroke-linecap="round"/><path d="M12 7.8l1.1-4.4 4.2 1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18.4" cy="4.6" r="1.7"/></svg>',
+    threads: '<svg viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg>'
+  };
+  const BRAND_BG = {
+    onlyfans: 'linear-gradient(135deg,#ff6b9d,#c44569)',
+    instagram: 'linear-gradient(135deg,#833AB4,#E4405F 55%,#F77737)',
+    x: '#1c1c1f',
+    reddit: '#FF4500',
+    threads: '#2a2a2d'
+  };
+
+  /* ───── données : Supabase ou localStorage ───── */
+  let session = null;
+  const loadSession = () => { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch (e) { return null; } };
+  const saveSession = s => {
+    session = s;
+    try { s ? localStorage.setItem(SESSION_KEY, JSON.stringify(s)) : localStorage.removeItem(SESSION_KEY); } catch (e) {}
+  };
+  const toSession = j => ({ access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Date.now() + (j.expires_in || 3600) * 1000, email: j.user && j.user.email });
+
+  async function authPost(grant, body) {
+    const res = await fetch(`${SB_URL}/auth/v1/token?grant_type=${grant}`, {
+      method: 'POST',
+      headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(j.error_description || j.msg || j.message || 'Identifiants incorrects');
+    return j;
+  }
+  async function refresh() {
+    if (!session || !session.refresh_token) return false;
+    try { saveSession(toSession(await authPost('refresh_token', { refresh_token: session.refresh_token }))); return true; }
+    catch (e) { return false; }
+  }
+  async function api(path, { method = 'GET', body, headers = {}, prefer, retry = true } = {}) {
+    if (session && session.expires_at < Date.now() + 30000) await refresh();
+    const h = { apikey: SB_KEY, Authorization: `Bearer ${session ? session.access_token : SB_KEY}`, ...headers };
+    if (body !== undefined) h['Content-Type'] = 'application/json';
+    if (prefer) h.Prefer = prefer;
+    const res = await fetch(SB_URL + path, { method, headers: h, body: body !== undefined ? JSON.stringify(body) : undefined });
+    if (res.status === 401 && retry && session) {
+      if (await refresh()) return api(path, { method, body, headers, prefer, retry: false });
+      logout();
+      throw new Error('Session expirée, reconnecte-toi.');
+    }
+    if (!res.ok) {
+      let msg = res.statusText || `Erreur ${res.status}`;
+      try { const j = await res.json(); msg = j.message || j.msg || j.error_description || msg; } catch (e) {}
+      if (/row-level security|permission denied/i.test(msg)) msg = "Ce compte n'a pas les droits admin (voir supabase/schema.sql).";
+      throw new Error(msg);
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  const local = {
+    read() {
+      let d;
+      try { d = JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { d = {}; }
+      d.events = Array.isArray(d.events) ? d.events : [];
+      d.links = Array.isArray(d.links) && d.links.length ? d.links : LINKS.map((l, i) => ({ key: l.key, label: l.label, url: l.url, enabled: true, position: i }));
+      d.settings = { ...DEFAULT_SETTINGS, ...(d.settings || {}) };
+      return d;
+    },
+    write(d) {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(d)); }
+      catch (e) { throw new Error('Stockage du navigateur plein'); }
+    }
+  };
+
+  const DB = {
+    async events() {
+      if (!REMOTE) return local.read().events;
+      const out = [];
+      for (let from = 0; ; from += 1000) {
+        const rows = await api('/rest/v1/events?select=*&order=created_at.asc', { headers: { Range: `${from}-${from + 999}`, 'Range-Unit': 'items' } });
+        out.push(...rows);
+        if (rows.length < 1000) break;
+      }
+      return out;
+    },
+    async addEvents(rows) {
+      if (!REMOTE) {
+        const d = local.read();
+        d.events = d.events.concat(rows).sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+        local.write(d);
+        return;
+      }
+      for (let i = 0; i < rows.length; i += 500) await api('/rest/v1/events', { method: 'POST', body: rows.slice(i, i + 500), prefer: 'return=minimal' });
+    },
+    async deleteEvents(demoOnly) {
+      if (!REMOTE) {
+        const d = local.read();
+        d.events = demoOnly ? d.events.filter(e => !e.is_demo) : [];
+        local.write(d);
+        return;
+      }
+      await api(`/rest/v1/events?${demoOnly ? 'is_demo=eq.true' : 'id=not.is.null'}`, { method: 'DELETE', prefer: 'return=minimal' });
+    },
+    async links() {
+      return REMOTE ? api('/rest/v1/links?select=*&order=position.asc') : local.read().links;
+    },
+    async updateLink(key, patch) {
+      if (!REMOTE) {
+        const d = local.read();
+        d.links = d.links.map(l => (l.key === key ? { ...l, ...patch } : l));
+        local.write(d);
+        return;
+      }
+      const rows = await api(`/rest/v1/links?key=eq.${encodeURIComponent(key)}`, { method: 'PATCH', body: patch, prefer: 'return=representation' });
+      if (!rows || !rows.length) throw new Error("Modification refusée : ce compte n'est pas admin.");
+    },
+    async settings() {
+      if (!REMOTE) return local.read().settings;
+      const rows = await api('/rest/v1/settings?id=eq.1&select=data');
+      return { ...DEFAULT_SETTINGS, ...(rows[0] && rows[0].data) };
+    },
+    async saveSettings(data) {
+      if (!REMOTE) {
+        const d = local.read();
+        d.settings = { ...data };
+        local.write(d);
+        return;
+      }
+      const rows = await api('/rest/v1/settings?id=eq.1', { method: 'PATCH', body: { data, updated_at: new Date().toISOString() }, prefer: 'return=representation' });
+      if (!rows || !rows.length) throw new Error("Modification refusée : ce compte n'est pas admin.");
+    }
+  };
+
+  /* ───── données de démo ───── */
+  function makeDemo() {
+    const pick = pairs => {
+      let r = Math.random() * pairs.reduce((s, p) => s + p[1], 0);
+      for (const [v, w] of pairs) { if ((r -= w) <= 0) return v; }
+      return pairs[pairs.length - 1][0];
+    };
+    const HOURS = [2, 1.3, .8, .5, .4, .4, .6, 1, 1.4, 1.6, 1.8, 2, 2.3, 2.2, 2, 2, 2.3, 2.8, 3.8, 4.6, 5.2, 5.4, 4.8, 3.4].map((w, h) => [h, w]);
+    const REFS = [['instagram', 45], ['x', 20], ['reddit', 15], ['direct', 12], ['threads', 8]];
+    const HOST = { instagram: 'instagram.com', x: 't.co', reddit: 'reddit.com', direct: 'direct', threads: 'threads.net' };
+    const LINKW = [['onlyfans', 40], ['instagram', 25], ['x', 15], ['reddit', 12], ['threads', 8]];
+    const COUNTRY = [['FR', 38], ['US', 16], ['GB', 8], ['BE', 8], ['CA', 7], ['CH', 6], ['DE', 6], ['ES', 6], ['IT', 5]];
+    const rows = [];
+    const now = Date.now();
+    const today = sod(new Date());
+    for (let d = 29; d >= 0; d--) {
+      const day = addDays(today, -d);
+      const dow = day.getDay();
+      const growth = 1 + 1.4 * (29 - d) / 29;
+      const sessions = Math.round(23 * growth * (dow === 0 || dow === 6 ? 1.35 : dow === 5 ? 1.15 : 1) * (.85 + Math.random() * .3));
+      for (let s = 0; s < sessions; s++) {
+        const t = +day + pick(HOURS) * 36e5 + Math.random() * 36e5;
+        if (t > now) continue;
+        const referrer = pick(REFS);
+        const base = { referrer, ref_host: HOST[referrer], device: Math.random() < .7 ? 'mobile' : 'desktop', country: pick(COUNTRY), path: '/', sid: uuid().slice(0, 18), is_demo: true };
+        rows.push({ id: uuid(), created_at: new Date(t).toISOString(), type: 'view', link: null, ...base });
+        if (Math.random() < .56) {
+          const n = Math.random() < .18 ? 2 : 1;
+          for (let c = 0; c < n; c++) {
+            const ct = Math.min(now, t + (5 + Math.random() * 120) * 1000);
+            rows.push({ id: uuid(), created_at: new Date(ct).toISOString(), type: 'click', link: pick(LINKW), ...base });
+          }
+        }
+      }
+    }
+    return rows.sort((a, b) => Date.parse(a.created_at) - Date.parse(b.created_at));
+  }
+
+  /* ───── état ───── */
+  const state = {
+    events: [],
+    links: [],
+    settings: { ...DEFAULT_SETTINGS },
+    draft: null,
+    period: (() => { try { return localStorage.getItem('mia_dash_period') || '30d'; } catch (e) { return '30d'; } })(),
+    page: null,
+    hidden: new Set(),
+    an: { link: 'all', ref: 'all', device: 'all', sort: 't', dir: 'desc', pg: 0 }
+  };
+  if (!['today', '7d', '30d', 'all'].includes(state.period)) state.period = '30d';
+  let cleanups = [];
+
+  async function loadAll() {
+    const [events, links, settings] = await Promise.all([DB.events(), DB.links(), DB.settings()]);
+    state.events = events.map(e => ({ ...e, t: Date.parse(e.created_at) })).filter(e => !isNaN(e.t)).sort((a, b) => a.t - b.t);
+    state.links = LINKS.map((l, i) => {
+      const row = (links || []).find(x => x.key === l.key) || {};
+      return { key: l.key, label: l.label, url: row.url || l.url, enabled: row.enabled !== false, position: row.position ?? i };
+    }).sort((a, b) => a.position - b.position);
+    state.settings = { ...DEFAULT_SETTINGS, ...settings };
+  }
+  async function reloadEvents() {
+    const events = await DB.events();
+    state.events = events.map(e => ({ ...e, t: Date.parse(e.created_at) })).filter(e => !isNaN(e.t)).sort((a, b) => a.t - b.t);
+    updateBanner();
+  }
+
+  const lowerBound = t => {
+    let lo = 0, hi = state.events.length;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (state.events[mid].t < t) lo = mid + 1; else hi = mid; }
+    return lo;
+  };
+  const slice = (a, b) => state.events.slice(lowerBound(+a), lowerBound(+b));
+
+  function range(period = state.period) {
+    const now = new Date();
+    let start;
+    if (period === 'today') start = sod(now);
+    else if (period === '7d') start = addDays(sod(now), -6);
+    else if (period === '30d') start = addDays(sod(now), -29);
+    else start = sod(state.events.length ? state.events[0].t : now);
+    const end = new Date(+now + 1);
+    const len = end - start;
+    return { start, end, prevStart: new Date(start - len), prevEnd: start };
+  }
+
+  function metrics(events) {
+    let clicks = 0, views = 0, of = 0;
+    const sids = new Set(), refs = {};
+    for (const e of events) {
+      if (e.type === 'click') {
+        clicks++;
+        if (e.link === 'onlyfans') of++;
+        const r = e.referrer || 'direct';
+        refs[r] = (refs[r] || 0) + 1;
+      } else if (e.type === 'view') {
+        views++;
+        sids.add(e.sid || e.id);
+      }
+    }
+    let top = null;
+    for (const [k, n] of Object.entries(refs)) if (!top || n > top.n) top = { k, n };
+    const visitors = sids.size;
+    return { clicks, views, visitors, of, conv: visitors ? (of / visitors) * 100 : 0, top, topPct: top && clicks ? (top.n / clicks) * 100 : 0 };
+  }
+
+  function buckets(r) {
+    const out = [];
+    if (state.period === 'today') {
+      const h = new Date().getHours();
+      for (let i = 0; i <= h; i++) {
+        const s = new Date(r.start);
+        s.setHours(i);
+        out.push({ s: +s, e: +s + 36e5, label: `${i}h`, full: `Aujourd'hui · ${i}h – ${i + 1}h` });
+      }
+      return out;
+    }
+    const days = Math.round((sod(r.end) - sod(r.start)) / DAY) + 1;
+    const step = days > 90 ? 7 : 1;
+    for (let i = 0; i < days; i += step) {
+      const s = addDays(r.start, i);
+      const e = addDays(r.start, Math.min(i + step, days));
+      out.push({
+        s: +s,
+        e: +e,
+        label: step === 7 ? dfShort.format(s) : days <= 7 ? dfWeek.format(s) : dfShort.format(s),
+        full: step === 7 ? `Semaine du ${dfShort.format(s)}` : cap(dfLong.format(s))
+      });
+    }
+    return out;
+  }
+
+  /* ───── composants ───── */
+  const tip = $('#tip');
+  function showTip(html, x, y) {
+    tip.innerHTML = html;
+    tip.classList.add('show');
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let left = x + 16, top = y + 16;
+    if (left + w > innerWidth - 8) left = x - w - 16;
+    if (top + h > innerHeight - 8) top = y - h - 16;
+    tip.style.transform = `translate(${Math.max(8, left)}px, ${Math.max(8, top)}px)`;
+  }
+  const hideTip = () => tip.classList.remove('show');
+
+  function countUp(el) {
+    const to = +el.dataset.count, dec = +(el.dataset.dec || 0), suf = el.dataset.suf || '', delay = +(el.dataset.delay || 0);
+    const f = v => (dec ? fmtDec(v, dec) : fmt(v)) + suf;
+    if (reduce || !to) { el.textContent = f(to); return; }
+    el.textContent = f(0);
+    const t0 = performance.now() + delay;
+    const step = now => {
+      const t = Math.min(1, Math.max(0, (now - t0) / 1000));
+      el.textContent = f(to * easeOut(t));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  function toast(msg, err) {
+    const n = document.createElement('div');
+    n.className = `toast${err ? ' err' : ''}`;
+    n.innerHTML = `<i></i><span>${esc(msg)}</span>`;
+    $('#toasts').append(n);
+    setTimeout(() => { n.classList.add('bye'); setTimeout(() => n.remove(), 260); }, err ? 4200 : 2600);
+  }
+
+  function busy(btn, on, text = 'Chargement…') {
+    const t = $('.t', btn);
+    if (on) {
+      btn.dataset.label = t ? t.textContent : '';
+      btn.classList.add('loading');
+      if (t) t.textContent = text;
+    } else {
+      btn.classList.remove('loading');
+      if (t && btn.dataset.label) t.textContent = btn.dataset.label;
+    }
+  }
+
+  const modal = $('#modal'), modalCard = $('#modal-card');
+  let modalClose = null;
+  function openModal({ title, text = '', body = '', confirm, cancel = 'Annuler', danger = false, onOpen }) {
+    modalCard.innerHTML = `<h3>${esc(title)}</h3>${text ? `<p>${esc(text)}</p>` : ''}${body}
+      <div class="modal-a"><button class="btn btn-ghost" type="button" data-m="cancel">${esc(cancel)}</button>
+      <button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" type="button" data-m="ok"><span class="spin"></span><span class="t">${esc(confirm.label)}</span></button></div>`;
+    const prev = document.activeElement;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    const ok = $('[data-m="ok"]', modalCard);
+    const close = () => {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalClose = null;
+      if (prev && prev.focus) prev.focus({ preventScroll: true });
+    };
+    modalClose = close;
+    $('[data-m="cancel"]', modalCard).onclick = close;
+    ok.onclick = async () => {
+      busy(ok, true);
+      try { await confirm.run(); close(); }
+      catch (e) { if (e && e.message) toast(e.message, true); }
+      finally { busy(ok, false); }
+    };
+    if (onOpen) onOpen(modalCard, ok);
+    setTimeout(() => { const f = $('input', modalCard) || ok; f.focus(); }, 60);
+  }
+  modal.addEventListener('click', e => { if (e.target === modal && modalClose) modalClose(); });
+
+  function niceScale(maxV) {
+    if (maxV <= 0) return { max: 4, step: 1 };
+    const rough = maxV / 4;
+    const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+    const n = rough / mag;
+    let step = (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * mag;
+    step = Math.max(1, step);
+    return { max: Math.ceil(maxV / step) * step, step };
+  }
+
+  function smooth(pts) {
+    const n = pts.length;
+    if (!n) return '';
+    const f = v => v.toFixed(1);
+    if (n === 1) return `M${f(pts[0][0])},${f(pts[0][1])}`;
+    const dx = [], m = [], t = new Array(n);
+    for (let i = 0; i < n - 1; i++) { dx[i] = pts[i + 1][0] - pts[i][0]; m[i] = (pts[i + 1][1] - pts[i][1]) / dx[i]; }
+    t[0] = m[0];
+    t[n - 1] = m[n - 2];
+    for (let i = 1; i < n - 1; i++) t[i] = m[i - 1] * m[i] <= 0 ? 0 : (m[i - 1] + m[i]) / 2;
+    for (let i = 0; i < n - 1; i++) {
+      if (m[i] === 0) { t[i] = 0; t[i + 1] = 0; continue; }
+      const a = t[i] / m[i], b = t[i + 1] / m[i], s = a * a + b * b;
+      if (s > 9) { const k = 3 / Math.sqrt(s); t[i] = k * a * m[i]; t[i + 1] = k * b * m[i]; }
+    }
+    let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+    for (let i = 0; i < n - 1; i++) {
+      const h = dx[i] / 3;
+      d += ` C${f(pts[i][0] + h)},${f(pts[i][1] + t[i] * h)} ${f(pts[i + 1][0] - h)},${f(pts[i + 1][1] - t[i + 1] * h)} ${f(pts[i + 1][0])},${f(pts[i + 1][1])}`;
+    }
+    return d;
+  }
+
+  function drawPath(paths, duration = 1000, delay = 0) {
+    if (reduce) return;
+    paths.forEach(p => {
+      const len = p.getTotalLength();
+      if (!len) return;
+      p.style.strokeDasharray = `${len}px`;
+      p.animate([{ strokeDashoffset: `${len}px` }, { strokeDashoffset: '0px' }], { duration, delay, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' })
+        .onfinish = () => { p.style.strokeDasharray = ''; };
+    });
+  }
+
+  /* graphique principal */
+  function lineSeries(r, clicks) {
+    const B = buckets(r);
+    const series = LINKS.map(l => ({ ...l, values: B.map(() => 0), total: 0 }));
+    const idx = Object.fromEntries(series.map((s, i) => [s.key, i]));
+    let j = 0;
+    for (const e of clicks) {
+      while (j < B.length && e.t >= B[j].e) j++;
+      if (j >= B.length) break;
+      if (e.t >= B[j].s && idx[e.link] !== undefined) { series[idx[e.link]].values[j]++; series[idx[e.link]].total++; }
+    }
+    return { B, series };
+  }
+
+  function drawLine(host, data, animate) {
+    const W = Math.max(300, host.clientWidth), H = host.clientHeight || 300;
+    const P = { l: 38, r: 10, t: 12, b: 30 };
+    const iw = W - P.l - P.r, ih = H - P.t - P.b;
+    const n = data.B.length;
+    const vis = data.series.filter(s => !state.hidden.has(s.key));
+    const { max, step } = niceScale(Math.max(0, ...vis.flatMap(s => s.values)));
+    const X = i => P.l + (n < 2 ? iw / 2 : (i * iw) / (n - 1));
+    const Y = v => P.t + ih * (1 - v / max);
+    let grid = '';
+    for (let v = 0; v <= max + 1e-9; v += step) {
+      const y = Y(v).toFixed(1);
+      grid += `<line class="gl" x1="${P.l}" x2="${W - P.r}" y1="${y}" y2="${y}"/><text class="ax" x="${P.l - 10}" y="${y}" text-anchor="end" dominant-baseline="middle">${fmt(v)}</text>`;
+    }
+    const every = Math.ceil(n / Math.max(2, Math.floor(iw / 68)));
+    let xl = '';
+    data.B.forEach((b, i) => {
+      if (i % every) return;
+      xl += `<text class="ax" x="${X(i).toFixed(1)}" y="${H - 8}" text-anchor="${n === 1 ? 'middle' : i === 0 ? 'start' : 'middle'}">${esc(b.label)}</text>`;
+    });
+    const pink = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim() || '#ff6b9d';
+    let lines = '', area = '';
+    const order = ['threads', 'reddit', 'x', 'instagram', 'onlyfans'];
+    vis.slice().sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key)).forEach(s => {
+      const pts = s.values.map((v, i) => [X(i), Y(v)]);
+      const d = smooth(pts);
+      const color = s.key === 'onlyfans' ? pink : s.color;
+      const stroke = s.key === 'instagram' ? 'url(#g-ig)' : color;
+      if (s.key === 'onlyfans' && n > 1) area = `<path class="area" d="${d} L${X(n - 1).toFixed(1)},${Y(0).toFixed(1)} L${X(0).toFixed(1)},${Y(0).toFixed(1)} Z" fill="url(#g-area)"/>`;
+      lines += `<path class="ln-glow" d="${d}" stroke="${stroke}"/><path class="ln" d="${d}" stroke="${stroke}"/>`;
+      if (n === 1) lines += `<circle cx="${X(0)}" cy="${Y(s.values[0])}" r="3.5" fill="${color}"/>`;
+    });
+    host.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution des clics">
+      <defs>
+        <linearGradient id="g-ig" gradientUnits="userSpaceOnUse" x1="${P.l}" x2="${W - P.r}" y1="0" y2="0"><stop offset="0" stop-color="#833AB4"/><stop offset=".5" stop-color="#E4405F"/><stop offset="1" stop-color="#F77737"/></linearGradient>
+        <linearGradient id="g-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${pink}" stop-opacity=".26"/><stop offset="1" stop-color="${pink}" stop-opacity="0"/></linearGradient>
+      </defs>
+      ${grid}${xl}${area}${lines}
+      <line class="xh" y1="${P.t}" y2="${P.t + ih}"/><g class="pts"></g>
+      <rect class="hit" x="${P.l}" y="${P.t}" width="${iw}" height="${ih}"/>
+    </svg>`;
+    const svg = $('svg', host), xh = $('.xh', svg), ptsG = $('.pts', svg);
+    if (animate) {
+      drawPath($$('.ln, .ln-glow', svg));
+      const a = $('.area', svg);
+      if (a && !reduce) a.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 600, fill: 'backwards' });
+    }
+    const hit = $('.hit', svg);
+    hit.addEventListener('pointermove', e => {
+      if (!vis.length) return;
+      const rect = svg.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) * W) / rect.width;
+      const i = n < 2 ? 0 : Math.max(0, Math.min(n - 1, Math.round(((px - P.l) / iw) * (n - 1))));
+      const x = X(i).toFixed(1);
+      xh.setAttribute('x1', x);
+      xh.setAttribute('x2', x);
+      xh.style.opacity = 1;
+      ptsG.innerHTML = vis.map(s => `<circle class="pt" cx="${x}" cy="${Y(s.values[i]).toFixed(1)}" r="4.5" fill="${s.key === 'onlyfans' ? pink : s.color}"/>`).join('');
+      const rows = vis.slice().sort((a, b) => b.values[i] - a.values[i])
+        .map(s => `<div class="tip-r"><i class="dot" style="background:${s.key === 'onlyfans' ? pink : s.color}"></i>${esc(s.label)}<b>${fmt(s.values[i])}</b></div>`).join('');
+      showTip(`<div class="tip-t">${esc(data.B[i].full)}</div>${rows}`, e.clientX, e.clientY);
+    });
+    hit.addEventListener('pointerleave', () => { xh.style.opacity = 0; ptsG.innerHTML = ''; hideTip(); });
+  }
+
+  /* donut */
+  function drawDonut(host, items, total, animate) {
+    if (!total) { host.innerHTML = '<div class="empty" style="width:100%">Aucun clic sur la période</div>'; return; }
+    const R = 78, SW = 22, C = 2 * Math.PI * R;
+    const live = items.filter(i => i.value > 0);
+    const gap = live.length > 1 ? 2.5 : 0;
+    let off = 0;
+    const segs = live.map(it => { const len = (it.value / total) * C; const s = { ...it, len: Math.max(.5, len - gap), off }; off += len; return s; });
+    host.innerHTML = `<div class="donut"><svg viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="${R}" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="${SW}"/>
+        <g transform="rotate(-90 100 100)">${segs.map((s, i) => `<circle class="seg" data-i="${i}" cx="100" cy="100" r="${R}" fill="none" stroke="${s.color}" stroke-width="${SW}" stroke-dasharray="${s.len.toFixed(2)} ${C.toFixed(2)}" stroke-dashoffset="${(-s.off).toFixed(2)}"/>`).join('')}</g>
+      </svg><div class="donut-c"><div><b data-count="${total}">0</b><span>clics</span></div></div></div>
+      <div class="dl">${items.map(it => `<div class="dl-r"><i style="background:${it.color}"></i>${esc(it.label)}<b>${fmt(it.value)}</b><em>${fmtDec(total ? (it.value / total) * 100 : 0, 1)} %</em></div>`).join('')}</div>`;
+    const svg = $('svg', host);
+    const circles = $$('.seg', svg);
+    if (animate && !reduce) {
+      svg.animate([{ transform: 'rotate(-140deg) scale(.86)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 1000, easing: 'cubic-bezier(.22,1,.36,1)' });
+      circles.forEach((c, i) => {
+        const s = segs[i];
+        c.animate([{ strokeDasharray: `0 ${C}` }, { strokeDasharray: `${s.len} ${C}` }], {
+          duration: 320 + (s.len / C) * 680,
+          delay: (s.off / C) * 640,
+          easing: 'cubic-bezier(.33,0,.2,1)',
+          fill: 'backwards'
+        });
+      });
+    }
+    circles.forEach((c, i) => {
+      const s = segs[i];
+      const phi = ((s.off + s.len / 2) / C) * Math.PI * 2;
+      c.addEventListener('pointerenter', () => {
+        c.style.transform = `translate(${(Math.cos(phi) * 7).toFixed(2)}px, ${(Math.sin(phi) * 7).toFixed(2)}px)`;
+        circles.forEach(o => { if (o !== c) o.style.opacity = .4; });
+      });
+      c.addEventListener('pointermove', e => showTip(`<div class="tip-r"><i class="dot" style="background:${s.color}"></i>${esc(s.label)}<b>${fmt(s.value)} · ${fmtDec((s.value / total) * 100, 1)} %</b></div>`, e.clientX, e.clientY));
+      c.addEventListener('pointerleave', () => {
+        c.style.transform = '';
+        circles.forEach(o => { o.style.opacity = ''; });
+        hideTip();
+      });
+    });
+    $$('[data-count]', host).forEach(countUp);
+  }
+
+  function growFills(root) {
+    const fills = $$('.fill', root);
+    requestAnimationFrame(() => requestAnimationFrame(() => fills.forEach(f => { f.style.transform = `scaleX(${f.dataset.s})`; })));
+  }
+
+  function sparkline(values, color, id) {
+    const W = 120, H = 38, n = values.length, max = Math.max(1, ...values);
+    const pts = values.map((v, i) => [(i * W) / (n - 1), H - 3 - (v / max) * (H - 8)]);
+    const d = smooth(pts);
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true">
+      <defs><linearGradient id="sp-${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".28"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${d} L${W},${H} L0,${H} Z" fill="url(#sp-${id})"/>
+      <path class="sp-ln" d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${pts[n - 1][0]}" cy="${pts[n - 1][1].toFixed(1)}" r="2.8" fill="${color}"/>
+    </svg>`;
+  }
+
+  /* ───── pages ───── */
+  const deltaHtml = (cur, prev, kind) => {
+    if (state.period === 'all') return '<div class="kpi-d flat">—<span>sur toute la période</span></div>';
+    const label = state.period === 'today' ? "vs hier à la même heure" : 'vs période précédente';
+    if (kind === 'pts') {
+      const d = cur - prev;
+      const cls = Math.abs(d) < .05 ? 'flat' : d > 0 ? 'up' : 'down';
+      return `<div class="kpi-d ${cls}">${d > 0 ? '↑' : d < 0 ? '↓' : '→'} ${fmtDec(Math.abs(d), 1)} pt<span>${label}</span></div>`;
+    }
+    if (!prev) return cur ? `<div class="kpi-d up">↑ nouveau<span>${label}</span></div>` : `<div class="kpi-d flat">—<span>${label}</span></div>`;
+    const p = ((cur - prev) / prev) * 100;
+    const cls = Math.abs(p) < .5 ? 'flat' : p > 0 ? 'up' : 'down';
+    return `<div class="kpi-d ${cls}">${p > 0 ? '↑' : p < 0 ? '↓' : '→'} ${fmtDec(Math.abs(p), Math.abs(p) < 10 ? 1 : 0)} %<span>${label}</span></div>`;
+  };
+
+  function renderOverview(v) {
+    const r = range();
+    const cur = slice(r.start, r.end), prev = slice(r.prevStart, r.prevEnd);
+    const m = metrics(cur), pm = metrics(prev);
+    const clicks = cur.filter(e => e.type === 'click');
+    const top = m.top ? (REF[m.top.k] || REF.other).label : '—';
+    v.innerHTML = `
+      <div class="grid kpis">
+        <div class="card kpi enter" style="--k:0">
+          <div class="kpi-h"><span class="kpi-ic">${ic('cursor')}</span>Total clics</div>
+          <div class="kpi-v"><span data-count="${m.clicks}" data-delay="0">0</span></div>
+          ${deltaHtml(m.clicks, pm.clicks)}
+        </div>
+        <div class="card kpi enter" style="--k:1">
+          <div class="kpi-h"><span class="kpi-ic">${ic('eye')}</span>Vues de page</div>
+          <div class="kpi-v"><span data-count="${m.visitors}" data-delay="60">0</span><span class="kpi-pct">visiteurs</span></div>
+          ${deltaHtml(m.visitors, pm.visitors)}
+        </div>
+        <div class="card kpi hl enter" style="--k:2" title="Clics OnlyFans ÷ visiteurs uniques">
+          <div class="kpi-h"><span class="kpi-ic">${ic('target')}</span>Taux de conversion</div>
+          <div class="kpi-v"><span data-count="${m.conv.toFixed(2)}" data-dec="1" data-suf=" %" data-delay="120">0</span></div>
+          ${deltaHtml(m.conv, pm.conv, 'pts')}
+        </div>
+        <div class="card kpi enter" style="--k:3">
+          <div class="kpi-h"><span class="kpi-ic">${ic('globe')}</span>Source n°1</div>
+          <div class="kpi-v"><span class="kpi-src">${esc(top)}</span>${m.top ? `<span class="kpi-pct" data-count="${Math.round(m.topPct)}" data-suf=" %" data-delay="180">0</span>` : ''}</div>
+          <div class="kpi-d flat"><span>${m.top ? `${fmt(m.top.n)} clics sur ${fmt(m.clicks)}` : 'aucun clic'}</span></div>
+        </div>
+      </div>
+      <div class="card enter" style="--k:4;margin-top:16px">
+        <div class="ch-h"><div><div class="ch-t">Évolution des clics</div><div class="ch-s">par lien · ${state.period === 'today' ? "par heure aujourd'hui" : 'par jour'}</div></div><div class="legend" id="legend"></div></div>
+        <div class="chart" id="line"></div>
+      </div>
+      <div class="grid row2" style="margin-top:16px">
+        <div class="card enter" style="--k:5"><div class="ch-h"><div><div class="ch-t">Répartition par lien</div><div class="ch-s">part des clics par destination</div></div></div><div class="donut-wrap" id="donut"></div></div>
+        <div class="card enter" style="--k:6"><div class="ch-h"><div><div class="ch-t">Appareils</div><div class="ch-s">clics mobile vs desktop</div></div></div><div id="devices"></div></div>
+      </div>`;
+    $$('.kpi [data-count]', v).forEach(countUp);
+
+    const data = lineSeries(r, clicks);
+    const host = $('#line', v), legend = $('#legend', v);
+    const renderLegend = () => {
+      legend.innerHTML = data.series.map(s => `<button class="lg${state.hidden.has(s.key) ? ' off' : ''}" type="button" data-k="${s.key}" aria-pressed="${!state.hidden.has(s.key)}"><i style="background:${s.key === 'instagram' ? 'linear-gradient(135deg,#833AB4,#E4405F,#F77737)' : s.key === 'onlyfans' ? 'var(--pink)' : s.color}"></i>${esc(s.label)}<b>${fmt(s.total)}</b></button>`).join('');
+    };
+    renderLegend();
+    legend.addEventListener('click', e => {
+      const b = e.target.closest('.lg');
+      if (!b) return;
+      const k = b.dataset.k;
+      state.hidden.has(k) ? state.hidden.delete(k) : state.hidden.add(k);
+      renderLegend();
+      drawLine(host, data, false);
+    });
+    drawLine(host, data, true);
+    let lastW = host.clientWidth, t;
+    const ro = new ResizeObserver(() => {
+      clearTimeout(t);
+      t = setTimeout(() => { if (Math.abs(host.clientWidth - lastW) > 2) { lastW = host.clientWidth; drawLine(host, data, false); } }, 120);
+    });
+    ro.observe(host);
+    cleanups.push(() => ro.disconnect());
+
+    const pink = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
+    drawDonut($('#donut', v), data.series.map(s => ({ key: s.key, label: s.label, value: s.total, color: s.key === 'onlyfans' ? pink : s.color })), clicks.length, true);
+
+    const mob = clicks.filter(e => e.device === 'mobile').length, desk = clicks.length - mob, tot = clicks.length || 1;
+    $('#devices', v).innerHTML = clicks.length ? `<div class="dev">
+      <div><div class="dev-h"><span class="dev-ic">${ic('mobile')}</span>Mobile<span class="dev-p">${fmtDec((mob / tot) * 100, 1)} %</span></div>
+        <div class="dev-n">${fmt(mob)} clics</div><div class="track"><div class="fill" data-s="${(mob / tot).toFixed(4)}" style="background:linear-gradient(90deg,var(--rose),var(--pink))"></div></div></div>
+      <div><div class="dev-h"><span class="dev-ic">${ic('desktop')}</span>Desktop<span class="dev-p">${fmtDec((desk / tot) * 100, 1)} %</span></div>
+        <div class="dev-n">${fmt(desk)} clics</div><div class="track"><div class="fill" data-s="${(desk / tot).toFixed(4)}" style="background:linear-gradient(90deg,#1d4ed8,var(--blue))"></div></div></div>
+    </div>` : '<div class="empty">Aucun clic sur la période</div>';
+    growFills($('#devices', v));
+  }
+
+  function renderAnalytics(v) {
+    const A = state.an;
+    const r = range();
+    const cur = slice(r.start, r.end);
+    const clicks = cur.filter(e => e.type === 'click');
+    const views = cur.filter(e => e.type === 'view');
+    const refsPresent = [...new Set(clicks.map(e => e.referrer || 'direct'))].sort((a, b) => ((REF[a] || REF.other).label).localeCompare((REF[b] || REF.other).label));
+    if (A.ref !== 'all' && !refsPresent.includes(A.ref)) A.ref = 'all';
+    const sel = (key, label, opts) => `<select class="input" data-f="${key}" aria-label="${esc(label)}">${opts.map(([val, txt]) => `<option value="${esc(val)}"${A[key] === val ? ' selected' : ''}>${esc(txt)}</option>`).join('')}</select>`;
+    const th = (col, label) => `<th><button type="button" data-s="${col}" class="${A.sort === col ? `on ${A.dir}` : ''}">${esc(label)}${ic('chevron')}</button></th>`;
+    v.innerHTML = `
+      <div class="card enter" style="--k:0">
+        <div class="ch-h">
+          <div><div class="ch-t">Clics récents</div><div class="ch-s" id="t-count"></div></div>
+          <div class="toolbar">
+            ${sel('link', 'Lien', [['all', 'Tous les liens'], ...LINKS.map(l => [l.key, l.label])])}
+            ${sel('ref', 'Source', [['all', 'Toutes les sources'], ...refsPresent.map(k => [k, (REF[k] || REF.other).label])])}
+            ${sel('device', 'Appareil', [['all', 'Tous les appareils'], ['mobile', 'Mobile'], ['desktop', 'Desktop']])}
+          </div>
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr>${th('t', 'Date / heure')}${th('link', 'Lien cliqué')}${th('referrer', 'Source')}${th('device', 'Appareil')}${th('country', 'Pays')}</tr></thead>
+          <tbody id="tbody"></tbody>
+        </table></div>
+        <div class="pager" id="pager"></div>
+      </div>
+      <div class="grid an-row" style="margin-top:16px">
+        <div class="card enter" style="--k:1">
+          <div class="ch-h"><div><div class="ch-t">Heatmap des clics</div><div class="ch-s">jour × heure — les meilleurs créneaux pour poster</div></div></div>
+          <div class="hm-scroll"><div class="hm" id="hm"></div></div>
+          <div class="hm-legend">Moins<i style="--a:.06"></i><i style="--a:.3"></i><i style="--a:.55"></i><i style="--a:.8"></i><i style="--a:1"></i>Plus</div>
+        </div>
+        <div class="card enter" style="--k:2">
+          <div class="ch-h"><div><div class="ch-t">Top referrers</div><div class="ch-s">d'où viennent les visiteurs</div></div></div>
+          <div class="refs" id="refs"></div>
+        </div>
+      </div>`;
+
+    const filtered = () => clicks.filter(e => (A.link === 'all' || e.link === A.link) && (A.ref === 'all' || (e.referrer || 'direct') === A.ref) && (A.device === 'all' || e.device === A.device));
+    const PAGE = 20;
+    const key = (e, col) => (col === 't' ? e.t : col === 'link' ? (LINK[e.link] || {}).label || '' : col === 'referrer' ? (REF[e.referrer || 'direct'] || REF.other).label : col === 'country' ? (e.country ? region(e.country) : '') : e[col] || '');
+
+    const table = () => {
+      const rows = filtered().sort((a, b) => {
+        const x = key(a, A.sort), y = key(b, A.sort);
+        const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'fr');
+        return A.dir === 'asc' ? c : -c;
+      });
+      const pages = Math.max(1, Math.ceil(rows.length / PAGE));
+      A.pg = Math.min(A.pg, pages - 1);
+      const view = rows.slice(A.pg * PAGE, A.pg * PAGE + PAGE);
+      $('#t-count', v).textContent = `${fmt(rows.length)} clic${rows.length > 1 ? 's' : ''} sur la période`;
+      $('#tbody', v).innerHTML = view.length ? view.map(e => {
+        const l = LINK[e.link] || { label: e.link, color: '#888' };
+        const c = e.link === 'onlyfans' ? 'var(--pink)' : e.link === 'x' ? '#d4d4d8' : l.color;
+        const ref = REF[e.referrer || 'direct'] || REF.other;
+        return `<tr>
+          <td>${esc(dfStamp.format(e.t))}${e.is_demo ? '<span class="tag">démo</span>' : ''}</td>
+          <td><span class="badge" style="--c:${c}">${esc(l.label)}</span></td>
+          <td>${esc(ref.label)} ${e.ref_host && e.ref_host !== 'direct' ? `<span class="mut">· ${esc(e.ref_host)}</span>` : ''}</td>
+          <td><span class="cell-dev">${ic(e.device === 'mobile' ? 'mobile' : 'desktop')}${e.device === 'mobile' ? 'Mobile' : 'Desktop'}</span></td>
+          <td>${e.country ? esc(region(e.country)) : '<span class="mut">—</span>'}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="5"><div class="empty">Aucun clic pour ces filtres</div></td></tr>';
+      $('#pager', v).innerHTML = `<span>${rows.length ? `${fmt(A.pg * PAGE + 1)}–${fmt(Math.min(rows.length, (A.pg + 1) * PAGE))} sur ${fmt(rows.length)}` : ''}</span>
+        <div><button class="btn btn-ghost btn-sm" type="button" data-pg="-1"${A.pg === 0 ? ' disabled' : ''}>${ic('left')}Préc.</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-pg="1"${A.pg >= pages - 1 ? ' disabled' : ''}>Suiv.${ic('right')}</button></div>`;
+      $$('th button', v).forEach(b => { b.className = A.sort === b.dataset.s ? `on ${A.dir}` : ''; });
+    };
+
+    const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+    const DAYS_LONG = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const heat = () => {
+      const M = Array.from({ length: 7 }, () => new Array(24).fill(0));
+      filtered().forEach(e => { const d = new Date(e.t); M[(d.getDay() + 6) % 7][d.getHours()]++; });
+      const max = Math.max(1, ...M.flat());
+      let h = '<span></span>';
+      for (let x = 0; x < 24; x++) h += `<span class="hm-h">${x % 3 === 0 ? `${x}h` : ''}</span>`;
+      M.forEach((row, y) => {
+        h += `<span class="hm-l">${DAYS[y]}</span>`;
+        row.forEach((n, x) => { h += `<span class="hm-c${n ? '' : ' z'}" style="--a:${(.1 + .9 * (n / max)).toFixed(3)};--x:${x};--y:${y}" data-d="${y}" data-h="${x}" data-n="${n}"></span>`; });
+      });
+      $('#hm', v).innerHTML = h;
+    };
+    $('#hm', v).addEventListener('pointerover', e => {
+      const c = e.target.closest('.hm-c');
+      if (!c) return;
+      const n = +c.dataset.n, hr = +c.dataset.h;
+      showTip(`<div class="tip-t">${DAYS_LONG[c.dataset.d]} · ${hr}h – ${hr + 1}h</div><div class="tip-r">Clics<b>${fmt(n)}</b></div>`, e.clientX, e.clientY);
+    });
+    $('#hm', v).addEventListener('pointerleave', hideTip);
+
+    const refs = () => {
+      const pool = views.filter(e => A.device === 'all' || e.device === A.device);
+      const counts = {};
+      pool.forEach(e => { const h = e.ref_host || 'direct'; (counts[h] = counts[h] || { n: 0, cat: e.referrer || 'direct' }).n++; });
+      const list = Object.entries(counts).sort((a, b) => b[1].n - a[1].n).slice(0, 8);
+      const tot = pool.length || 1, max = list.length ? list[0][1].n : 1;
+      $('#refs', v).innerHTML = list.length ? list.map(([host, o]) => {
+        const col = o.cat === 'instagram' ? 'linear-gradient(90deg,#833AB4,#E4405F,#F77737)' : (REF[o.cat] || REF.other).color;
+        return `<div class="ref"><div class="ref-h"><span class="ref-n">${esc(host === 'direct' ? 'Direct (lien tapé, favori…)' : host)}</span><span class="mut">${fmt(o.n)} visite${o.n > 1 ? 's' : ''}</span><b>${fmtDec((o.n / tot) * 100, 0)} %</b></div>
+          <div class="track"><div class="fill" data-s="${(o.n / max).toFixed(4)}" style="background:${col}"></div></div></div>`;
+      }).join('') : '<div class="empty">Aucune visite sur la période</div>';
+      growFills($('#refs', v));
+    };
+
+    table();
+    heat();
+    refs();
+    $$('select[data-f]', v).forEach(s => s.addEventListener('change', () => { A[s.dataset.f] = s.value; A.pg = 0; table(); heat(); if (s.dataset.f === 'device') refs(); }));
+    $('thead', v).addEventListener('click', e => {
+      const b = e.target.closest('button[data-s]');
+      if (!b) return;
+      const col = b.dataset.s;
+      if (A.sort === col) A.dir = A.dir === 'asc' ? 'desc' : 'asc';
+      else { A.sort = col; A.dir = col === 't' ? 'desc' : 'asc'; }
+      A.pg = 0;
+      table();
+    });
+    $('#pager', v).addEventListener('click', e => {
+      const b = e.target.closest('[data-pg]');
+      if (!b) return;
+      A.pg += +b.dataset.pg;
+      table();
+    });
+  }
+
+  function renderLinks(v) {
+    const clicks = state.events.filter(e => e.type === 'click');
+    const today = sod(new Date());
+    const pink = getComputedStyle(document.documentElement).getPropertyValue('--pink').trim();
+    v.innerHTML = `<div class="links">${state.links.map((l, k) => {
+      const mine = clicks.filter(e => e.link === l.key);
+      const days = Array.from({ length: 7 }, (_, i) => { const s = +addDays(today, i - 6), e = +addDays(today, i - 5); return mine.filter(c => c.t >= s && c.t < e).length; });
+      const color = l.key === 'onlyfans' ? pink : l.key === 'instagram' ? '#E4405F' : LINK[l.key].color;
+      return `<div class="card lk enter${l.enabled ? '' : ' off'}" style="--k:${k}" data-key="${l.key}">
+        <span class="lk-ic" style="background:${BRAND_BG[l.key]}">${BRAND[l.key]}</span>
+        <div style="min-width:0"><div class="lk-n">${esc(l.label)}</div><a class="lk-u" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer"><span>${esc(l.url.replace(/^https:\/\//, ''))}</span>${ic('external')}</a></div>
+        <div class="lk-stat">${sparkline(days, color, l.key)}<div class="lk-c"><b data-count="${mine.length}" data-delay="${k * 60}">0</b><span>clics au total</span></div></div>
+        <div class="lk-a">
+          <button class="sw" type="button" role="switch" aria-checked="${l.enabled}" aria-label="Afficher ${esc(l.label)} sur la landing" data-act="toggle"></button>
+          <button class="btn btn-ghost btn-sm" type="button" data-act="edit" aria-label="Modifier ${esc(l.label)}">${ic('edit')}<span class="bt">Modifier</span></button>
+        </div>
+      </div>`;
+    }).join('')}</div>
+    <p class="foot-note">Les changements s'appliquent à la landing dès le prochain chargement de la page.${REMOTE ? '' : ' En mode local, seulement dans ce navigateur.'}</p>`;
+    $$('[data-count]', v).forEach(countUp);
+    drawPath($$('.sp-ln', v), 900, 200);
+    v.querySelector('.links').addEventListener('click', async e => {
+      const b = e.target.closest('[data-act]');
+      if (!b) return;
+      const card = b.closest('.lk');
+      const l = state.links.find(x => x.key === card.dataset.key);
+      if (b.dataset.act === 'toggle') {
+        const next = !l.enabled;
+        l.enabled = next;
+        b.setAttribute('aria-checked', next);
+        card.classList.toggle('off', !next);
+        try {
+          await DB.updateLink(l.key, { enabled: next });
+          toast(`${l.label} ${next ? 'affiché' : 'masqué'} sur la landing`);
+        } catch (err) {
+          l.enabled = !next;
+          b.setAttribute('aria-checked', !next);
+          card.classList.toggle('off', next);
+          toast(err.message, true);
+        }
+        return;
+      }
+      openModal({
+        title: `Modifier le lien ${l.label}`,
+        text: "L'adresse doit commencer par https://",
+        body: `<label class="field"><span>URL</span><input class="input" id="m-url" type="url" value="${esc(l.url)}" spellcheck="false" autocomplete="off"></label><p class="err" id="m-err"></p>`,
+        confirm: {
+          label: 'Sauvegarder',
+          run: async () => {
+            const input = $('#m-url'), errEl = $('#m-err');
+            let u = null;
+            try { u = new URL(input.value.trim()); } catch (err) { u = null; }
+            if (!u || u.protocol !== 'https:') {
+              input.classList.add('bad');
+              errEl.textContent = 'Adresse invalide : elle doit commencer par https://';
+              throw new Error('');
+            }
+            await DB.updateLink(l.key, { url: u.href });
+            l.url = u.href;
+            const a = $('.lk-u', card);
+            a.href = u.href;
+            $('span', a).textContent = u.href.replace(/^https:\/\//, '');
+            toast(`Lien ${l.label} mis à jour`);
+          }
+        },
+        onOpen: (card2, ok) => {
+          const input = $('#m-url', card2);
+          input.addEventListener('input', () => { input.classList.remove('bad'); $('#m-err', card2).textContent = ''; });
+          input.addEventListener('keydown', ev => { if (ev.key === 'Enter') ok.click(); });
+        }
+      });
+    });
+  }
+
+  const savebar = $('#savebar');
+  function renderSettings(v) {
+    state.draft = { ...state.settings };
+    const D = state.draft;
+    const previewUrl = new URL('../?preview=1', location.href).href;
+    const demoCount = state.events.filter(e => e.is_demo).length;
+    const clickCount = state.events.filter(e => e.type === 'click').length;
+    const wide = matchMedia('(min-width: 1241px)').matches;
+    v.innerHTML = `
+      <div class="set${wide ? '' : ' nopv'}" id="set">
+        <div class="stack">
+          <section class="card enter" style="--k:0">
+            <div class="sec-h"><div><h3>Landing page</h3><div class="sec-d">Textes affichés sous la photo principale</div></div>
+              <button class="btn btn-ghost btn-sm" type="button" id="pv-toggle">${ic('eye')}<span class="t">${wide ? "Masquer l'aperçu" : 'Aperçu'}</span></button></div>
+            <div class="frow">
+              <label class="field"><span>Nom affiché</span><input class="input" data-f="name" maxlength="40" value="${esc(D.name)}"></label>
+              <label class="field"><span>Bio</span><input class="input" data-f="handle" maxlength="60" value="${esc(D.handle)}"></label>
+              <label class="field"><span>Badge</span><input class="input" data-f="badge" maxlength="40" value="${esc(D.badge)}"></label>
+            </div>
+          </section>
+          <section class="card enter" style="--k:1">
+            <h3>Apparence</h3>
+            <div class="srow">
+              <div><div class="srow-t">Couleur d'accent</div><div class="srow-d">Boutons, badge FREE, halos</div></div>
+              <div class="swatches" id="swatches">
+                ${Object.entries(ACCENTS).map(([k, [a, b]]) => `<button class="swatch" type="button" data-acc="${k}" style="--a:${a};--b:${b}" title="${cap(k)}" aria-label="Accent ${k}"></button>`).join('')}
+                <label class="swatch custom" title="Couleur personnalisée"><input type="color" id="acc-custom" value="${esc(D.accentPink)}" aria-label="Couleur personnalisée"></label>
+              </div>
+            </div>
+            <div class="srow">
+              <div><div class="srow-t">Style des blocs</div><div class="srow-d">Forme des cartes photo</div></div>
+              <div class="segc" id="blocks">${[['rounded', 'Arrondi'], ['sharp', 'Net'], ['glass', 'Verre']].map(([k, t]) => `<button type="button" data-b="${k}">${t}</button>`).join('')}</div>
+            </div>
+          </section>
+          <section class="card enter" style="--k:2">
+            <h3>Sécurité</h3>
+            <div class="srow">
+              <div><div class="srow-t">Gate 18+ avant OnlyFans</div><div class="srow-d">Demande une confirmation d'âge avant d'ouvrir le lien</div></div>
+              <button class="sw" type="button" role="switch" id="gate" aria-checked="${D.gate !== false}" aria-label="Gate 18+"></button>
+            </div>
+            ${REMOTE ? `<form class="pw" id="pw" novalidate>
+              <label class="field"><span>Nouveau mot de passe</span><input class="input" type="password" id="pw1" autocomplete="new-password" minlength="8"></label>
+              <label class="field"><span>Confirmer</span><input class="input" type="password" id="pw2" autocomplete="new-password" minlength="8"></label>
+              <button class="btn btn-ghost" type="submit"><span class="spin"></span><span class="t">Changer le mot de passe</span></button>
+            </form><p class="err" id="pw-err"></p>` : '<div class="srow"><div><div class="srow-t">Mot de passe du dashboard</div><div class="srow-d">Disponible une fois Supabase configuré (mode local actuellement).</div></div></div>'}
+          </section>
+          <section class="card enter" style="--k:3">
+            <h3>Données</h3>
+            <div class="sec-d">${fmt(state.events.length)} évènements enregistrés · ${fmt(clickCount)} clics${demoCount ? ` · dont ${fmt(demoCount)} de démo` : ''}</div>
+            <div class="data-row">
+              <button class="btn btn-ghost" type="button" id="exp">${ic('download')}Exporter les clics (CSV)</button>
+              ${demoCount
+                ? `<button class="btn btn-ghost" type="button" id="demo-del"><span class="spin"></span>${ic('trash')}<span class="t">Supprimer les données de démo</span></button>`
+                : `<button class="btn btn-ghost" type="button" id="demo-add"><span class="spin"></span>${ic('sparkles')}<span class="t">Générer des données de démo</span></button>`}
+              <button class="btn btn-danger" type="button" id="reset">${ic('trash')}Réinitialiser toutes les données</button>
+            </div>
+          </section>
+        </div>
+        <div class="pv-col">
+          <div class="phone"><div class="phone-scr"><iframe id="pv" title="Aperçu de la landing page" src="${esc(previewUrl)}"></iframe></div></div>
+          <p class="pv-cap">Aperçu en direct · rien n'est publié avant « Enregistrer »</p>
+        </div>
+      </div>`;
+
+    const pv = $('#pv', v);
+    const target = location.origin === 'null' ? '*' : location.origin;
+    const push = () => { try { pv.contentWindow.postMessage({ type: 'mia-preview', settings: state.draft, links: state.links }, target); } catch (e) {} };
+    pv.addEventListener('load', () => { push(); setTimeout(push, 400); });
+
+    const syncUi = () => {
+      $$('.swatch[data-acc]', v).forEach(s => s.classList.toggle('on', D.accent === s.dataset.acc));
+      $('.swatch.custom', v).classList.toggle('on', D.accent === 'custom');
+      $$('#blocks button', v).forEach(b => b.classList.toggle('on', (D.blocks || 'rounded') === b.dataset.b));
+      $('#gate', v).setAttribute('aria-checked', D.gate !== false);
+    };
+    const changed = () => {
+      syncUi();
+      push();
+      const dirty = JSON.stringify(state.draft) !== JSON.stringify(state.settings);
+      savebar.classList.toggle('show', dirty);
+    };
+    syncUi();
+
+    $$('input[data-f]', v).forEach(i => i.addEventListener('input', () => { D[i.dataset.f] = i.value; changed(); }));
+    $('#swatches', v).addEventListener('click', e => {
+      const s = e.target.closest('[data-acc]');
+      if (!s) return;
+      const [a, b] = ACCENTS[s.dataset.acc];
+      Object.assign(D, { accent: s.dataset.acc, accentPink: a, accentRose: b });
+      changed();
+    });
+    $('#acc-custom', v).addEventListener('input', e => {
+      Object.assign(D, { accent: 'custom', accentPink: e.target.value, accentRose: shade(e.target.value, -.28) });
+      changed();
+    });
+    $('#blocks', v).addEventListener('click', e => {
+      const b = e.target.closest('[data-b]');
+      if (!b) return;
+      D.blocks = b.dataset.b;
+      changed();
+    });
+    $('#gate', v).addEventListener('click', () => { D.gate = D.gate === false; changed(); });
+    $('#pv-toggle', v).addEventListener('click', e => {
+      const set = $('#set', v);
+      const hidden = set.classList.toggle('nopv');
+      $('.t', e.currentTarget).textContent = hidden ? 'Aperçu' : "Masquer l'aperçu";
+      if (!hidden && !matchMedia('(min-width: 1241px)').matches) $('.pv-col', v).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    const cancel = () => {
+      state.draft = { ...state.settings };
+      renderSettingsInPlace();
+    };
+    const save = async () => {
+      const btn = $('#sv-save');
+      busy(btn, true, 'Enregistrement…');
+      try {
+        const clean = {
+          ...state.draft,
+          name: String(state.draft.name || '').trim().slice(0, 40) || DEFAULT_SETTINGS.name,
+          handle: String(state.draft.handle || '').trim().slice(0, 60),
+          badge: String(state.draft.badge || '').trim().slice(0, 40)
+        };
+        await DB.saveSettings(clean);
+        state.settings = clean;
+        state.draft = { ...clean };
+        applyAccent();
+        savebar.classList.remove('show');
+        toast('Réglages enregistrés');
+      } catch (e) {
+        toast(e.message, true);
+      } finally {
+        busy(btn, false);
+      }
+    };
+    $('#sv-cancel').onclick = cancel;
+    $('#sv-save').onclick = save;
+    cleanups.push(() => { savebar.classList.remove('show'); $('#sv-cancel').onclick = null; $('#sv-save').onclick = null; });
+
+    const pw = $('#pw', v);
+    if (pw) {
+      pw.addEventListener('submit', async e => {
+        e.preventDefault();
+        const a = $('#pw1', v), b = $('#pw2', v), err = $('#pw-err', v), btn = $('button', pw);
+        err.textContent = '';
+        if (a.value.length < 8) { err.textContent = '8 caractères minimum.'; a.classList.add('bad'); return; }
+        if (a.value !== b.value) { err.textContent = 'Les deux mots de passe ne correspondent pas.'; b.classList.add('bad'); return; }
+        busy(btn, true);
+        try {
+          await api('/auth/v1/user', { method: 'PUT', body: { password: a.value } });
+          a.value = b.value = '';
+          toast('Mot de passe modifié');
+        } catch (x) {
+          err.textContent = x.message;
+        } finally {
+          busy(btn, false);
+        }
+      });
+      $$('input', pw).forEach(i => i.addEventListener('input', () => i.classList.remove('bad')));
+    }
+
+    $('#exp', v).addEventListener('click', exportCsv);
+    const demoAdd = $('#demo-add', v), demoDel = $('#demo-del', v);
+    if (demoAdd) demoAdd.addEventListener('click', async () => {
+      busy(demoAdd, true, 'Génération…');
+      try { await seedDemo(); toast('Données de démo ajoutées'); renderSettingsInPlace(); }
+      catch (e) { toast(e.message, true); busy(demoAdd, false); }
+    });
+    if (demoDel) demoDel.addEventListener('click', () => removeDemo(() => renderSettingsInPlace()));
+    $('#reset', v).addEventListener('click', () => {
+      openModal({
+        title: 'Réinitialiser toutes les données ?',
+        text: `Les ${fmt(state.events.length)} vues et clics enregistrés seront supprimés définitivement. Les liens et réglages sont conservés.`,
+        body: '<label class="field"><span>Tape SUPPRIMER pour confirmer</span><input class="input" id="m-confirm" autocomplete="off" spellcheck="false"></label>',
+        danger: true,
+        confirm: {
+          label: 'Tout supprimer',
+          run: async () => {
+            await DB.deleteEvents(false);
+            await reloadEvents();
+            toast('Données réinitialisées');
+            renderSettingsInPlace();
+          }
+        },
+        onOpen: (card, ok) => {
+          ok.disabled = true;
+          $('#m-confirm', card).addEventListener('input', e => { ok.disabled = e.target.value.trim() !== 'SUPPRIMER'; });
+        }
+      });
+    });
+  }
+  function renderSettingsInPlace() {
+    if (state.page !== 'settings') return;
+    cleanupPage();
+    renderSettings($('#view'));
+  }
+
+  function exportCsv() {
+    const rows = state.events.filter(e => e.type === 'click');
+    if (!rows.length) { toast('Aucun clic à exporter', true); return; }
+    const cell = v => {
+      let s = String(v ?? '');
+      if (/^[=+\-@]/.test(s)) s = `'${s}`;
+      return /[;"\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const head = ['date', 'lien', 'source', 'domaine', 'appareil', 'pays', 'demo'];
+    const lines = [head.join(';')].concat(rows.map(e => [
+      new Date(e.t).toISOString(), (LINK[e.link] || {}).label || e.link, (REF[e.referrer || 'direct'] || REF.other).label,
+      e.ref_host || '', e.device || '', e.country || '', e.is_demo ? 'oui' : 'non'
+    ].map(cell).join(';')));
+    const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `mia-clics-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast(`${fmt(rows.length)} clics exportés`);
+  }
+
+  async function seedDemo() {
+    await DB.addEvents(makeDemo());
+    await reloadEvents();
+  }
+  function removeDemo(after) {
+    const n = state.events.filter(e => e.is_demo).length;
+    openModal({
+      title: 'Supprimer les données de démo ?',
+      text: `${fmt(n)} évènements de démo seront supprimés. Les vraies visites restent intactes.`,
+      danger: true,
+      confirm: {
+        label: 'Supprimer la démo',
+        run: async () => {
+          await DB.deleteEvents(true);
+          await reloadEvents();
+          toast('Données de démo supprimées');
+          if (after) after();
+          else if (state.page) rerender();
+        }
+      }
+    });
+  }
+
+  function updateBanner() {
+    const n = state.events.filter(e => e.is_demo).length;
+    const b = $('#banner');
+    b.hidden = !n;
+    if (n) {
+      b.innerHTML = `<span>🧪</span><span><b>Données de démo affichées</b> — ${fmt(n)} évènements simulés pour visualiser le dashboard.</span><button class="btn btn-ghost btn-sm" type="button" id="banner-del">Supprimer la démo</button>`;
+      $('#banner-del').onclick = () => removeDemo();
+    }
+  }
+
+  function applyAccent() {
+    const s = state.settings;
+    const pink = hexRgb(s.accentPink) ? s.accentPink : DEFAULT_SETTINGS.accentPink;
+    const rose = hexRgb(s.accentRose) ? s.accentRose : DEFAULT_SETTINGS.accentRose;
+    const root = document.documentElement.style;
+    root.setProperty('--pink', pink);
+    root.setProperty('--rose', rose);
+    root.setProperty('--pink-rgb', hexRgb(pink).join(' '));
+  }
+
+  /* ───── navigation ───── */
+  const PAGES = {
+    overview: { title: 'Dashboard', period: true, render: renderOverview },
+    analytics: { title: 'Analytics', period: true, render: renderAnalytics },
+    links: { title: 'Liens', period: false, render: renderLinks },
+    settings: { title: 'Réglages', period: false, render: renderSettings }
+  };
+  const view = $('#view'), app = $('#app');
+
+  function cleanupPage() {
+    cleanups.forEach(f => f());
+    cleanups = [];
+    hideTip();
+  }
+  function updateNav() {
+    $$('.nav-i[data-page]').forEach(a => {
+      const on = a.dataset.page === state.page;
+      a.classList.toggle('on', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    const on = $(`.nav-i[data-page="${state.page}"]`);
+    const ind = $('#nav-ind');
+    if (on) { ind.style.transform = `translateY(${on.offsetTop}px)`; ind.style.opacity = 1; }
+  }
+  function updatePills() {
+    $$('.pill').forEach(p => { const on = p.dataset.p === state.period; p.classList.toggle('on', on); p.setAttribute('aria-selected', on); });
+    const on = $(`.pill[data-p="${state.period}"]`), ind = $('#pill-ind');
+    if (on && on.offsetWidth) { ind.style.width = `${on.offsetWidth}px`; ind.style.transform = `translateX(${on.offsetLeft}px)`; }
+  }
+  function rerender() {
+    cleanupPage();
+    PAGES[state.page].render(view);
+  }
+  async function go(page) {
+    const first = !state.page;
+    state.page = page;
+    updateNav();
+    $('#page-title').textContent = PAGES[page].title;
+    $('#period').hidden = !PAGES[page].period;
+    document.title = `${PAGES[page].title} · Mia 🍓 Analytics`;
+    app.classList.remove('sb-open');
+    if (!first && !reduce) {
+      view.classList.remove('in');
+      view.classList.add('out');
+      await wait(150);
+      if (state.page !== page) return;
+    }
+    cleanupPage();
+    view.classList.remove('out');
+    PAGES[page].render(view);
+    view.classList.remove('in');
+    void view.offsetWidth;
+    view.classList.add('in');
+    scrollTo(0, 0);
+    updatePills();
+  }
+  function route() {
+    const p = (location.hash.match(/^#\/(\w+)/) || [])[1];
+    const page = PAGES[p] ? p : 'overview';
+    if (page !== state.page) go(page);
+  }
+
+  /* ───── auth & démarrage ───── */
+  const login = $('#login'), form = $('#login-form');
+  function showLogin() {
+    app.hidden = true;
+    savebar.classList.remove('show');
+    login.hidden = false;
+    form.classList.remove('shake');
+    void form.offsetWidth;
+    form.style.animation = '';
+    const note = $('#login-note'), fields = $('#login-fields'), localBtn = $('#login-local');
+    if (REMOTE) {
+      note.hidden = true;
+      fields.hidden = false;
+      localBtn.hidden = true;
+      setTimeout(() => $('#login-email').focus(), 120);
+    } else if (LOCAL_HOST) {
+      note.hidden = false;
+      note.innerHTML = "Supabase n'est pas encore configuré : <b>mode local</b>. Les données restent dans ce navigateur (clics faits sur la landing ouverte ici, et données de démo).";
+      fields.hidden = true;
+      localBtn.hidden = false;
+    } else {
+      note.hidden = false;
+      note.innerHTML = 'Dashboard pas encore relié à sa base de données. Renseigne <code>supabase_url</code> et <code>supabase_anon_key</code> dans <code>src/config.json</code>, relance le build puis republie.';
+      fields.hidden = true;
+      localBtn.hidden = true;
+    }
+  }
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!REMOTE) return;
+    const email = $('#login-email'), pass = $('#login-pass'), err = $('#login-err'), btn = $('#login-btn');
+    err.textContent = '';
+    if (!email.value.trim() || !pass.value) { fail('Renseigne ton e-mail et ton mot de passe.'); return; }
+    busy(btn, true, 'Connexion…');
+    try {
+      saveSession(toSession(await authPost('password', { email: email.value.trim(), password: pass.value })));
+      pass.value = '';
+      await startApp();
+    } catch (x) {
+      fail(/invalid/i.test(x.message) ? 'E-mail ou mot de passe incorrect.'
+        : /fetch|network|load failed/i.test(x.message) ? 'Serveur injoignable. Vérifie ta connexion et réessaie.' : x.message);
+    } finally {
+      busy(btn, false);
+    }
+    function fail(msg) {
+      err.textContent = msg;
+      [email, pass].forEach(i => i.classList.add('bad'));
+      form.classList.remove('shake');
+      void form.offsetWidth;
+      form.classList.add('shake');
+    }
+  });
+  $$('#login-email, #login-pass').forEach(i => i.addEventListener('input', () => { i.classList.remove('bad'); $('#login-err').textContent = ''; }));
+  $('#login-local').addEventListener('click', () => {
+    try { sessionStorage.setItem(LOCAL_FLAG, '1'); } catch (e) {}
+    startApp();
+  });
+
+  function logout() {
+    if (REMOTE && session) fetch(`${SB_URL}/auth/v1/logout`, { method: 'POST', headers: { apikey: SB_KEY, Authorization: `Bearer ${session.access_token}` } }).catch(() => {});
+    saveSession(null);
+    try { sessionStorage.removeItem(LOCAL_FLAG); } catch (e) {}
+    cleanupPage();
+    state.page = null;
+    history.replaceState(null, '', location.pathname + location.search);
+    showLogin();
+  }
+
+  async function startApp() {
+    login.hidden = true;
+    app.hidden = false;
+    $('#mode').hidden = REMOTE;
+    $('#sb-user').textContent = REMOTE && session ? session.email || '' : 'Mode local';
+    view.innerHTML = `<div class="grid kpis">${'<div class="skel" style="height:132px"></div>'.repeat(4)}</div><div class="skel" style="height:380px;margin-top:16px"></div>`;
+    try {
+      await loadAll();
+      if (!state.events.length) await seedDemo();
+    } catch (e) {
+      view.innerHTML = `<div class="card"><div class="ch-t">Impossible de charger les données</div><p class="ch-s" style="margin-top:6px">${esc(e.message)}</p><button class="btn btn-ghost btn-sm" style="margin-top:14px" type="button" id="retry">Réessayer</button></div>`;
+      $('#retry').onclick = startApp;
+      return;
+    }
+    applyAccent();
+    updateBanner();
+    state.page = null;
+    route();
+  }
+
+  function fillChrome() {
+    const nav = { overview: ['overview', 'Overview'], analytics: ['analytics', 'Analytics'], links: ['links', 'Links'], settings: ['settings', 'Settings'] };
+    $$('.nav-i[data-page]').forEach(a => { const [i, t] = nav[a.dataset.page]; a.innerHTML = `${ic(i)}<span class="lbl">${t}</span>`; });
+    $('#to-landing').innerHTML = `${ic('external')}<span class="lbl">Voir la landing page</span>`;
+    $('#logout-sb').innerHTML = `${ic('logout')}<span class="lbl">Se déconnecter</span>`;
+    $('#logout-top').innerHTML = `${ic('logout')}<span class="lbl">Se déconnecter</span>`;
+  }
+
+  $('#period').addEventListener('click', e => {
+    const p = e.target.closest('.pill');
+    if (!p || p.dataset.p === state.period) return;
+    state.period = p.dataset.p;
+    try { localStorage.setItem('mia_dash_period', state.period); } catch (x) {}
+    updatePills();
+    rerender();
+  });
+  $('#burger').addEventListener('click', () => app.classList.add('sb-open'));
+  $('#sb-tog').addEventListener('click', () => app.classList.toggle('sb-open'));
+  $('#scrim').addEventListener('click', () => app.classList.remove('sb-open'));
+  $('#logout-sb').addEventListener('click', logout);
+  $('#logout-top').addEventListener('click', logout);
+  addEventListener('hashchange', () => { if (!app.hidden) route(); });
+  addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (modalClose) modalClose();
+    else app.classList.remove('sb-open');
+  });
+  let rt;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { updatePills(); updateNav(); }, 100); });
+  if (document.fonts) document.fonts.ready.then(() => { updatePills(); updateNav(); });
+
+  async function boot() {
+    fillChrome();
+    if (REMOTE) {
+      session = loadSession();
+      if (session && session.expires_at < Date.now() + 60000 && !(await refresh())) saveSession(null);
+      if (session) return startApp();
+      return showLogin();
+    }
+    let flag = false;
+    try { flag = sessionStorage.getItem(LOCAL_FLAG) === '1'; } catch (e) {}
+    if (LOCAL_HOST && flag) return startApp();
+    showLogin();
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

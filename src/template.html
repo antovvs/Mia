@@ -24,7 +24,8 @@
   d.classList.add('js');
   var app = /Instagram|FBAN|FBAV|FB_IAB|Twitter|Snapchat|TikTok|musical_ly|BytedanceWebview|KAKAOTALK/i.test(ua) || /\bLine\//.test(ua);
   var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
-  if ((app && mobile) || /[?&]inapp=1(&|$)/.test(location.search)) d.classList.add('inapp');
+  var preview = /[?&]preview=1(&|$)/.test(location.search);
+  if (!preview && ((app && mobile) || /[?&]inapp=1(&|$)/.test(location.search))) d.classList.add('inapp');
   else window.__failsafe = setTimeout(function () { d.classList.add('in-all'); }, 2500);
 })();
 </script>
@@ -33,6 +34,7 @@
   --bg: #050505;
   --pink: #ff6b9d;
   --rose: #c44569;
+  --pink-rgb: 255 107 157;
   --ease: cubic-bezier(.25, .46, .45, .94);
   --apple: cubic-bezier(.16, 1, .3, 1);
   --spring: cubic-bezier(.34, 1.56, .64, 1);
@@ -88,7 +90,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
 .w1 { top: -2vh; right: -12vw; }
 .w2 { bottom: 4vh; left: -14vw; }
 .w3 { bottom: -12vh; left: calc(50% - 150px); }
-.b1 { background: #ff6b9d; }
+.b1 { background: var(--pink); }
 .b2 { background: #6c5ce7; animation-name: drift2; }
 .b3 { background: #0984e3; animation-name: drift3; }
 @keyframes drift { to { transform: translate3d(-90px, 110px, 0) scale(1.25); } }
@@ -246,8 +248,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
 
 .cta {
   aspect-ratio: 16 / 10;
-  border-color: rgba(255, 107, 157, .45);
-  box-shadow: 0 0 0 1px rgba(255, 107, 157, .18), 0 18px 46px -16px rgba(255, 107, 157, .55), 0 10px 28px -14px rgba(0, 0, 0, .85);
+  border-color: rgb(var(--pink-rgb) / .45);
+  box-shadow: 0 0 0 1px rgb(var(--pink-rgb) / .18), 0 18px 46px -16px rgb(var(--pink-rgb) / .55), 0 10px 28px -14px rgba(0, 0, 0, .85);
 }
 .cta::before { background: linear-gradient(to top, rgba(0, 0, 0, .82), rgba(0, 0, 0, .3) 48%, rgba(0, 0, 0, .36)); }
 .cta::after { animation: sheen 5.5s ease-in-out 4s infinite; }
@@ -258,7 +260,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   inset: 0;
   z-index: -1;
   border-radius: 16px;
-  box-shadow: 0 0 40px 8px rgba(255, 107, 157, .45);
+  box-shadow: 0 0 40px 8px rgb(var(--pink-rgb) / .45);
   opacity: 0;
 }
 .free {
@@ -273,8 +275,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   font-weight: 800;
   letter-spacing: .08em;
   color: #fff;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  box-shadow: 0 6px 18px -4px rgba(255, 107, 157, .7), inset 0 1px 0 rgba(255, 255, 255, .3);
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: 0 6px 18px -4px rgb(var(--pink-rgb) / .7), inset 0 1px 0 rgba(255, 255, 255, .3);
   pointer-events: none;
   animation: pulse 2.4s ease-in-out 3s infinite;
 }
@@ -306,22 +308,41 @@ html.modal-open, html.modal-open body { overflow: hidden; }
     box-shadow: 0 24px 46px -16px rgba(0, 0, 0, .95), 0 0 0 1px rgba(255, 255, 255, .06);
   }
   .cta:hover {
-    border-color: rgba(255, 107, 157, .75);
-    box-shadow: 0 0 0 1px rgba(255, 107, 157, .4), 0 30px 60px -16px rgba(255, 107, 157, .7), 0 14px 30px -14px rgba(0, 0, 0, .9);
+    border-color: rgb(var(--pink-rgb) / .75);
+    box-shadow: 0 0 0 1px rgb(var(--pink-rgb) / .4), 0 30px 60px -16px rgb(var(--pink-rgb) / .7), 0 14px 30px -14px rgba(0, 0, 0, .9);
   }
   .card:hover > img { transform: scale(1.06); }
   .card:hover::after { animation: sheen-fast .6s var(--ease) 1 both; }
   .card:active { translate: 0 -2px; }
-  .soc:hover span { transform: translateY(-3px) scale(1.06); box-shadow: 0 12px 22px -8px rgba(255, 107, 157, .55); }
+  .soc:hover span { transform: translateY(-3px) scale(1.06); box-shadow: 0 12px 22px -8px rgb(var(--pink-rgb) / .55); }
 }
 @keyframes sheen-fast { from { transform: translate3d(-130%, 0, 0); } to { transform: translate3d(130%, 0, 0); } }
 
 .ripple { position: absolute; z-index: 5; border-radius: 50%; background: rgba(255, 255, 255, .15); pointer-events: none; }
-.cta .ripple { background: rgba(255, 107, 157, .25); }
+.cta .ripple { background: rgb(var(--pink-rgb) / .25); }
 .spark { position: fixed; z-index: 400; line-height: 1; pointer-events: none; will-change: transform, opacity; }
 .spark.dot { border-radius: 50%; }
 
 .foot { margin-top: 56px; text-align: center; font-size: 11px; letter-spacing: .04em; color: #444; }
+
+[hidden] { display: none !important; }
+.grid > .wide { grid-column: 1 / -1; }
+.grid > .wide .tile { aspect-ratio: 2 / 1; }
+.blocks-sharp .card, .blocks-sharp .cta-cell::before { border-radius: 6px; }
+.blocks-sharp .ib { border-radius: 8px; }
+.blocks-glass .card { border-color: rgba(255, 255, 255, .22); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 10px 28px -14px rgba(0, 0, 0, .85); }
+.blocks-glass .cta { border-color: rgb(var(--pink-rgb) / .55); }
+.blocks-glass .lbl {
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .18);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
 
 /* ───── intro : état initial (étape 0 — écran noir) ───── */
 .js .hero { clip-path: circle(0% at 50% 40%); }
@@ -426,7 +447,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   border-radius: 24px;
   background: linear-gradient(180deg, #181618, #0d0c0e);
   border: 1px solid rgba(255, 255, 255, .1);
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 60px -20px rgba(255, 107, 157, .35);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 60px -20px rgb(var(--pink-rgb) / .35);
   opacity: 0;
   transform: scale(.9);
   transition: transform .2s ease, opacity .2s ease;
@@ -451,8 +472,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   font-weight: 800;
   letter-spacing: -.005em;
   color: #fff;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 12px 28px -10px rgba(255, 107, 157, .65);
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 12px 28px -10px rgb(var(--pink-rgb) / .65);
   touch-action: manipulation;
   transition: scale .2s ease;
 }
@@ -487,7 +508,7 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   left: 50%;
   margin-left: -160px;
   border-radius: 50%;
-  background: #ff6b9d;
+  background: var(--pink);
   filter: blur(100px);
   opacity: .22;
   animation: iadrift 14s ease-in-out infinite alternate;
@@ -500,14 +521,14 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   width: 54px;
   height: 54px;
   color: #fff;
-  filter: drop-shadow(0 0 12px rgba(255, 107, 157, .7));
+  filter: drop-shadow(0 0 12px rgb(var(--pink-rgb) / .7));
   animation: nudge 1.3s ease-in-out infinite;
 }
 .ia-arrow svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 @keyframes nudge { 0%, 100% { translate: 0 0; } 50% { translate: 4px -12px; } }
 .ia-in { position: relative; display: flex; flex-direction: column; align-items: center; animation: up .7s var(--apple) calc(var(--j) * 90ms) both; }
 .ia-av { position: relative; width: 60px; height: 60px; margin-bottom: 18px; }
-.ia-ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, #ff6b9d, #f8b739, #c44569, #ff6b9d); animation: spin 3s linear infinite; }
+.ia-ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--pink), #f8b739, var(--rose), var(--pink)); animation: spin 3s linear infinite; }
 .ia-av img { position: absolute; inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); border-radius: 50%; object-fit: cover; border: 2.5px solid var(--bg); }
 @keyframes spin { to { transform: rotate(360deg); } }
 .ia h2 { font-family: var(--display); font-size: 20px; font-weight: 800; letter-spacing: -.02em; }
@@ -544,8 +565,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
   font-size: 15px;
   font-weight: 800;
   color: #fff;
-  background: linear-gradient(135deg, #ff6b9d, #c44569);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 12px 28px -10px rgba(255, 107, 157, .65);
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 12px 28px -10px rgb(var(--pink-rgb) / .65);
   touch-action: manipulation;
   transition: scale .2s ease;
 }
@@ -655,18 +676,18 @@ html.modal-open, html.modal-open body { overflow: hidden; }
         </h1>
         <p class="handle">@itsmiaabby</p>
         <nav class="socials" aria-label="Social networks">
-          <a class="soc" style="--i:0" href="https://instagram.com/itsmiaabby" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span><svg class="i"><use href="#i-ig"/></svg></span></a>
-          <a class="soc" style="--i:1" href="https://x.com/itsmiaabby" target="_blank" rel="noopener noreferrer" aria-label="X"><span><svg class="i"><use href="#i-x"/></svg></span></a>
-          <a class="soc" style="--i:2" href="https://reddit.com/u/itsmiaabby" target="_blank" rel="noopener noreferrer" aria-label="Reddit"><span><svg class="i"><use href="#i-rd"/></svg></span></a>
-          <a class="soc" style="--i:3" href="https://threads.net/@itsmiaabby" target="_blank" rel="noopener noreferrer" aria-label="Threads"><span><svg class="i"><use href="#i-th"/></svg></span></a>
+          <a class="soc" style="--i:0" href="https://instagram.com/itsmiaabby" data-link="instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><span><svg class="i"><use href="#i-ig"/></svg></span></a>
+          <a class="soc" style="--i:1" href="https://x.com/itsmiaabby" data-link="x" target="_blank" rel="noopener noreferrer" aria-label="X"><span><svg class="i"><use href="#i-x"/></svg></span></a>
+          <a class="soc" style="--i:2" href="https://reddit.com/u/itsmiaabby" data-link="reddit" target="_blank" rel="noopener noreferrer" aria-label="Reddit"><span><svg class="i"><use href="#i-rd"/></svg></span></a>
+          <a class="soc" style="--i:3" href="https://threads.net/@itsmiaabby" data-link="threads" target="_blank" rel="noopener noreferrer" aria-label="Threads"><span><svg class="i"><use href="#i-th"/></svg></span></a>
         </nav>
         <p class="fol"><b>10K+</b> Followers</p>
       </div>
     </header>
 
     <section class="blocks">
-      <div class="cta-cell" data-r="c" data-t="1200">
-        <a class="card cta" id="cta" href="https://onlyfans.com/itsmiaabby" target="_blank" rel="noopener noreferrer" data-burst="🍓">
+      <div class="cta-cell" data-r="c" data-t="1200" data-cell="onlyfans">
+        <a class="card cta" id="cta" href="https://onlyfans.com/itsmiaabby" data-link="onlyfans" target="_blank" rel="noopener noreferrer" data-burst="🍓">
           <img src="__CTA__" alt="" width="784" height="490" decoding="async" draggable="false">
           <span class="free">🍓 FREE</span>
           <span class="of">OnlyFans</span>
@@ -675,29 +696,29 @@ html.modal-open, html.modal-open body { overflow: hidden; }
       </div>
 
       <div class="grid">
-        <div data-r="s" data-t="1600" style="--d:0ms">
-          <a class="card tile" href="https://instagram.com/itsmiaabby" target="_blank" rel="noopener noreferrer">
+        <div data-r="s" data-t="1600" style="--d:0ms" data-cell="instagram">
+          <a class="card tile" href="https://instagram.com/itsmiaabby" data-link="instagram" target="_blank" rel="noopener noreferrer">
             <img src="__INSTAGRAM__" alt="" width="480" height="480" decoding="async" draggable="false">
             <span class="ib"><svg class="i"><use href="#i-ig"/></svg></span>
             <span class="lbl">Instagram</span>
           </a>
         </div>
-        <div data-r="s" data-t="1600" style="--d:100ms">
-          <a class="card tile" href="https://x.com/itsmiaabby" target="_blank" rel="noopener noreferrer">
+        <div data-r="s" data-t="1600" style="--d:100ms" data-cell="x">
+          <a class="card tile" href="https://x.com/itsmiaabby" data-link="x" target="_blank" rel="noopener noreferrer">
             <img src="__X__" alt="" width="480" height="480" decoding="async" draggable="false">
             <span class="ib"><svg class="i"><use href="#i-x"/></svg></span>
             <span class="lbl">Twitter</span>
           </a>
         </div>
-        <div data-r="s" data-t="1600" style="--d:200ms">
-          <a class="card tile" href="https://reddit.com/u/itsmiaabby" target="_blank" rel="noopener noreferrer">
+        <div data-r="s" data-t="1600" style="--d:200ms" data-cell="reddit">
+          <a class="card tile" href="https://reddit.com/u/itsmiaabby" data-link="reddit" target="_blank" rel="noopener noreferrer">
             <img src="__REDDIT__" alt="" width="480" height="480" decoding="async" draggable="false">
             <span class="ib"><svg class="i"><use href="#i-rd"/></svg></span>
             <span class="lbl">Reddit</span>
           </a>
         </div>
-        <div data-r="s" data-t="1600" style="--d:300ms">
-          <a class="card tile" href="https://threads.net/@itsmiaabby" target="_blank" rel="noopener noreferrer">
+        <div data-r="s" data-t="1600" style="--d:300ms" data-cell="threads">
+          <a class="card tile" href="https://threads.net/@itsmiaabby" data-link="threads" target="_blank" rel="noopener noreferrer">
             <img src="__THREADS__" alt="" width="480" height="480" decoding="async" draggable="false">
             <span class="ib"><svg class="i"><use href="#i-th"/></svg></span>
             <span class="lbl">Threads</span>
@@ -715,251 +736,13 @@ html.modal-open, html.modal-open body { overflow: hidden; }
     <div class="age-ico" aria-hidden="true">🔞</div>
     <h2 id="age-t">Contenu réservé aux +18 ans</h2>
     <p>En continuant, tu confirmes avoir 18 ans ou plus.</p>
-    <a class="age-go" id="age-go" href="https://onlyfans.com/itsmiaabby" target="_blank" rel="noopener noreferrer" data-burst="🍓">J'ai 18 ans — Continuer 🍓</a>
+    <a class="age-go" id="age-go" href="https://onlyfans.com/itsmiaabby" data-link="onlyfans" target="_blank" rel="noopener noreferrer" data-burst="🍓">J'ai 18 ans — Continuer 🍓</a>
     <button class="age-cancel" id="age-cancel" type="button">Annuler</button>
   </div>
 </div>
 
 <script>
-(() => {
-  const root = document.documentElement;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const rand = (a, b) => a + Math.random() * (b - a);
-
-  /* ───── écran « ouvrir dans le navigateur » ───── */
-  if (root.classList.contains('inapp')) {
-    const toast = document.getElementById('toast');
-    let timer;
-    const say = msg => {
-      toast.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(timer);
-      timer = setTimeout(() => toast.classList.remove('show'), 2000);
-    };
-    const copy = async text => {
-      try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.setAttribute('readonly', '');
-      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-      document.body.append(ta);
-      ta.select();
-      ta.setSelectionRange(0, text.length);
-      let ok = false;
-      try { ok = document.execCommand('copy'); } catch (e) {}
-      ta.remove();
-      return ok;
-    };
-    document.getElementById('ia-copy').addEventListener('click', async () => {
-      const u = new URL(location.href);
-      u.searchParams.delete('inapp');
-      u.hash = '';
-      say((await copy(u.toString())) ? 'Lien copié ✓' : 'Copie impossible — copie le lien à la main');
-      if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(10);
-    });
-    return;
-  }
-
-  /* ───── effets partagés : ripple, burst, tilt ───── */
-  const ripple = (el, x, y) => {
-    const r = el.getBoundingClientRect();
-    const s = Math.max(r.width, r.height) * 2.2;
-    const n = document.createElement('span');
-    n.className = 'ripple';
-    n.style.cssText = `width:${s}px;height:${s}px;left:${x - r.left - s / 2}px;top:${y - r.top - s / 2}px`;
-    el.append(n);
-    n.animate(
-      [{ transform: 'scale(0)', opacity: 1 }, { transform: 'scale(1)', opacity: 1, offset: .6 }, { transform: 'scale(1)', opacity: 0 }],
-      { duration: 500, easing: 'cubic-bezier(.2,.6,.3,1)', fill: 'forwards' }
-    ).onfinish = () => n.remove();
-  };
-
-  const STEPS = 8;
-  const burst = (x, y, glyph) => {
-    const f = document.createDocumentFragment();
-    const n = Math.round(rand(12, 16));
-    for (let i = 0; i < n; i++) {
-      const p = document.createElement('span');
-      if (glyph) {
-        p.className = 'spark';
-        p.textContent = glyph;
-        p.style.cssText = `left:${x}px;top:${y}px;font-size:${rand(12, 18).toFixed(1)}px`;
-      } else {
-        const s = rand(3, 6);
-        const pink = Math.random() < .5;
-        p.className = 'spark dot';
-        p.style.cssText = `left:${x}px;top:${y}px;width:${s.toFixed(1)}px;height:${s.toFixed(1)}px;background:${pink ? '#ff6b9d' : '#fff'};box-shadow:0 0 ${(s * 2).toFixed(0)}px ${pink ? 'rgba(255,107,157,.8)' : 'rgba(255,255,255,.7)'}`;
-      }
-      f.append(p);
-      const a = rand(0, Math.PI * 2);
-      const v = rand(50, 125);
-      const vx = Math.cos(a) * v, vy = Math.sin(a) * v - 20, g = rand(45, 85);
-      const spin = rand(-80, 80);
-      const frames = [];
-      for (let k = 0; k <= STEPS; k++) {
-        const t = k / STEPS;
-        const e = 1 - (1 - t) * (1 - t);
-        frames.push({
-          transform: `translate(calc(-50% + ${(vx * e).toFixed(1)}px), calc(-50% + ${(vy * e + g * t * t).toFixed(1)}px)) scale(${(1 - t * .5).toFixed(2)}) rotate(${(t * spin).toFixed(0)}deg)`,
-          opacity: t < .45 ? 1 : 1 - (t - .45) / .55,
-          offset: t
-        });
-      }
-      p.animate(frames, { duration: 600, easing: 'linear', fill: 'forwards' }).onfinish = () => p.remove();
-    }
-    document.body.append(f);
-  };
-
-  /* ───── gate 18+ ───── */
-  const age = document.getElementById('age');
-  const ageGo = document.getElementById('age-go');
-  const ageCancel = document.getElementById('age-cancel');
-  const cta = document.getElementById('cta');
-  const page = document.querySelector('.page');
-  let lastFocus = null;
-
-  const openAge = () => {
-    lastFocus = document.activeElement;
-    age.classList.add('open');
-    age.setAttribute('aria-hidden', 'false');
-    root.classList.add('modal-open');
-    page.inert = true;
-    setTimeout(() => ageGo.focus({ preventScroll: true }), 60);
-  };
-  const closeAge = () => {
-    age.classList.remove('open');
-    age.setAttribute('aria-hidden', 'true');
-    root.classList.remove('modal-open');
-    page.inert = false;
-    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
-  };
-  ageCancel.addEventListener('click', closeAge);
-  age.addEventListener('click', e => { if (e.target === age) closeAge(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && age.classList.contains('open')) closeAge(); });
-  cta.addEventListener('auxclick', e => { e.preventDefault(); openAge(); });
-
-  /* ───── intro orchestrée ───── */
-  const targets = [...document.querySelectorAll('[data-r]')];
-  const markSeen = () => { try { sessionStorage.setItem('mia_seen', '1'); } catch (e) {} };
-  let seen = false;
-  try { seen = sessionStorage.getItem('mia_seen') === '1' && !/[?&]intro=1(&|$)/.test(location.search); } catch (e) {}
-
-  let io = null;
-  if ('IntersectionObserver' in window) {
-    io = new IntersectionObserver(entries => {
-      let k = 0;
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        e.target.style.setProperty('--d', `${k++ * 100}ms`);
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      });
-    }, { threshold: .12 });
-  }
-
-  let started = false;
-  const run = () => {
-    if (started) return;
-    started = true;
-    clearTimeout(window.__failsafe);
-    markSeen();
-    const quick = seen || reduce;
-    if (quick) {
-      root.classList.add('quick', 'st1', 'st2', 'st5');
-    } else {
-      root.classList.add('st1');
-      setTimeout(() => root.classList.add('st2'), 500);
-      setTimeout(() => root.classList.add('st5'), 2000);
-    }
-    let q = 0;
-    targets.forEach(t => {
-      const visible = t.getBoundingClientRect().top < innerHeight - 40;
-      if (!visible && io) { io.observe(t); return; }
-      if (quick) {
-        t.style.setProperty('--d', `${q++ * 70}ms`);
-        t.classList.add('in');
-      } else {
-        setTimeout(() => t.classList.add('in'), +t.dataset.t || 0);
-      }
-    });
-  };
-
-  const heroImg = document.querySelector('.hero-img');
-  document.getElementById('immersive-photo').style.backgroundImage = `url("${heroImg.src}")`;
-  const assets = Promise.all([
-    document.fonts ? document.fonts.ready : null,
-    heroImg.decode ? heroImg.decode().catch(() => {}) : null
-  ]);
-  Promise.race([assets, new Promise(r => setTimeout(r, 700))])
-    .then(() => { requestAnimationFrame(() => requestAnimationFrame(run)); setTimeout(run, 150); });
-
-  /* ───── interactions ───── */
-  const fx = !reduce;
-
-  if (fx && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const layers = [...document.querySelectorAll('[data-depth]')].map(el => ({ el, d: +el.dataset.depth }));
-    let tx = 0, ty = 0, cx = 0, cy = 0, running = false;
-    const tick = () => {
-      cx += (tx - cx) * .05;
-      cy += (ty - cy) * .05;
-      layers.forEach(l => { l.el.style.transform = `translate3d(${(cx * l.d).toFixed(2)}px,${(cy * l.d).toFixed(2)}px,0)`; });
-      if (Math.abs(tx - cx) > .0008 || Math.abs(ty - cy) > .0008) requestAnimationFrame(tick);
-      else running = false;
-    };
-    addEventListener('pointermove', e => {
-      tx = e.clientX / innerWidth - .5;
-      ty = e.clientY / innerHeight - .5;
-      if (!running) { running = true; requestAnimationFrame(tick); }
-    }, { passive: true });
-  }
-
-  const press = (el, glyph, onTap) => {
-    let tilt = false;
-    const aim = e => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--ry', `${(((e.clientX - r.left) / r.width - .5) * 6).toFixed(2)}deg`);
-      el.style.setProperty('--rx', `${(-((e.clientY - r.top) / r.height - .5) * 6).toFixed(2)}deg`);
-    };
-    const release = () => {
-      if (!tilt) return;
-      tilt = false;
-      el.classList.remove('tilting');
-      el.style.setProperty('--rx', '0deg');
-      el.style.setProperty('--ry', '0deg');
-    };
-    if (fx) {
-      el.addEventListener('pointerdown', e => {
-        if (e.button > 0) return;
-        ripple(el, e.clientX, e.clientY);
-        if (e.pointerType === 'touch' && el.classList.contains('card')) { tilt = true; el.classList.add('tilting'); aim(e); }
-      });
-      el.addEventListener('pointermove', e => { if (tilt) aim(e); });
-      ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => el.addEventListener(t, release));
-    }
-    el.addEventListener('click', e => {
-      if (fx) {
-        const r = el.getBoundingClientRect();
-        const kb = e.detail === 0;
-        const x = kb ? r.left + r.width / 2 : e.clientX;
-        const y = kb ? r.top + r.height / 2 : e.clientY;
-        if (kb) ripple(el, x, y);
-        burst(x, y, glyph);
-        el.animate({ scale: ['.97', '1'] }, { duration: 260, easing: 'cubic-bezier(.34,1.56,.64,1)' });
-        if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(10);
-      }
-      if (onTap) onTap(e);
-    });
-  };
-
-  document.querySelectorAll('.card').forEach(card => {
-    const isCta = card === cta;
-    press(card, card.dataset.burst || '', isCta ? e => {
-      e.preventDefault();
-      setTimeout(openAge, fx ? 180 : 0);
-    } : null);
-  });
-  press(ageGo, 'burst' in ageGo.dataset ? ageGo.dataset.burst : '🍓', () => setTimeout(closeAge, 500));
-})();
+__LANDING_JS__
 </script>
 </body>
 </html>
