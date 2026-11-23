@@ -376,27 +376,34 @@
       el.style.setProperty('--rx', '0deg');
       el.style.setProperty('--ry', '0deg');
     };
+    let touched = false;
     if (fx) {
       el.addEventListener('pointerdown', e => {
         if (e.button > 0) return;
-        ripple(el, e.clientX, e.clientY);
-        if (e.pointerType === 'touch' && el.classList.contains('card')) { tilt = true; el.classList.add('tilting'); aim(e); }
+        if (e.pointerType === 'touch') {
+          touched = true;
+          if (el.classList.contains('card')) { tilt = true; el.classList.add('tilting'); aim(e); }
+        } else {
+          ripple(el, e.clientX, e.clientY);
+        }
       });
       el.addEventListener('pointermove', e => { if (tilt) aim(e); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => el.addEventListener(t, release));
     }
     el.addEventListener('click', e => {
-      if (fx) {
+      if (onTap) onTap(e);
+      if (!fx) return;
+      try {
         const r = el.getBoundingClientRect();
         const kb = e.detail === 0;
         const x = kb ? r.left + r.width / 2 : e.clientX;
         const y = kb ? r.top + r.height / 2 : e.clientY;
-        if (kb) ripple(el, x, y);
+        if (kb || touched) ripple(el, x, y);
+        touched = false;
         burst(x, y, glyph);
         el.animate({ scale: ['.97', '1'] }, { duration: 260, easing: 'cubic-bezier(.34,1.56,.64,1)' });
         vibrate();
-      }
-      if (onTap) onTap(e);
+      } catch (err) {}
     });
   };
 

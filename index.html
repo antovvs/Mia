@@ -328,6 +328,8 @@ html.modal-open, html.modal-open body { overflow: hidden; }
 .foot { margin-top: 56px; text-align: center; font-size: 14px; letter-spacing: .02em; color: #4d4d4d; }
 
 [hidden] { display: none !important; }
+a, button { touch-action: manipulation; }
+.hero-img, .hero-shade, .card > img, .card .lbl, .card .ib, .of, .free, .immersive, .ia-blob, .ia-arrow, .cta-cell::before { pointer-events: none; }
 .grid > .wide { grid-column: 1 / -1; }
 .grid > .wide .tile { aspect-ratio: 2 / 1; }
 .blocks-sharp .card, .blocks-sharp .cta-cell::before { border-radius: 6px; }
@@ -1122,27 +1124,34 @@ html.modal-open, html.modal-open body { overflow: hidden; }
       el.style.setProperty('--rx', '0deg');
       el.style.setProperty('--ry', '0deg');
     };
+    let touched = false;
     if (fx) {
       el.addEventListener('pointerdown', e => {
         if (e.button > 0) return;
-        ripple(el, e.clientX, e.clientY);
-        if (e.pointerType === 'touch' && el.classList.contains('card')) { tilt = true; el.classList.add('tilting'); aim(e); }
+        if (e.pointerType === 'touch') {
+          touched = true;
+          if (el.classList.contains('card')) { tilt = true; el.classList.add('tilting'); aim(e); }
+        } else {
+          ripple(el, e.clientX, e.clientY);
+        }
       });
       el.addEventListener('pointermove', e => { if (tilt) aim(e); });
       ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => el.addEventListener(t, release));
     }
     el.addEventListener('click', e => {
-      if (fx) {
+      if (onTap) onTap(e);
+      if (!fx) return;
+      try {
         const r = el.getBoundingClientRect();
         const kb = e.detail === 0;
         const x = kb ? r.left + r.width / 2 : e.clientX;
         const y = kb ? r.top + r.height / 2 : e.clientY;
-        if (kb) ripple(el, x, y);
+        if (kb || touched) ripple(el, x, y);
+        touched = false;
         burst(x, y, glyph);
         el.animate({ scale: ['.97', '1'] }, { duration: 260, easing: 'cubic-bezier(.34,1.56,.64,1)' });
         vibrate();
-      }
-      if (onTap) onTap(e);
+      } catch (err) {}
     });
   };
 
