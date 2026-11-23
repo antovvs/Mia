@@ -21,7 +21,7 @@ def run():
     login = metal.crop((222, 340, 1014, 890))
     login = login.resize((round(login.width * 160 / login.height), 160), Image.LANCZOS)
     rgba = []
-    for r, g, b in login.getdata():
+    for r, g, b in getattr(login, "get_flattened_data", login.getdata)():
         a = max(r, g, b)
         rgba.append((255, 255, 255, 0) if a < 6 else (round(r * 255 / a), round(g * 255 / a), round(b * 255 / a), a))
     login = Image.new("RGBA", login.size)

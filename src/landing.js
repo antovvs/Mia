@@ -116,6 +116,7 @@
     const name = String(CFG.name || DEFAULT_CFG.name).slice(0, 40);
     setName(name);
     document.querySelector('.hero-img').alt = name;
+    document.querySelector('.ia h2').textContent = `Hey, c'est ${name}`;
     document.querySelector('.handle').textContent = String(CFG.handle || '').slice(0, 60);
     const fol = document.querySelector('.fol');
     const badge = String(CFG.badge || '').trim().slice(0, 40);
@@ -155,10 +156,8 @@
     ]);
     return { settings: s[0] && s[0].data, links: l };
   };
-  if (REMOTE && !PREVIEW) {
-    const cached = ls.get('mia_cfg', null);
-    if (cached) applyConfig(cached.settings, cached.links);
-  }
+  const cached = REMOTE && !PREVIEW ? ls.get('mia_cfg', null) : null;
+  if (cached) applyConfig(cached.settings, cached.links);
   const remote = loadRemote()
     .then(r => {
       if (!r) return;
@@ -338,7 +337,7 @@
     heroImg.decode ? heroImg.decode().catch(() => {}) : null,
     remote
   ]);
-  Promise.race([assets, new Promise(r => setTimeout(r, 700))])
+  Promise.race([assets, new Promise(r => setTimeout(r, REMOTE && !cached && !PREVIEW ? 1500 : 700))])
     .then(() => { requestAnimationFrame(() => requestAnimationFrame(run)); setTimeout(run, 150); });
 
   /* ───── interactions ───── */
@@ -410,8 +409,12 @@
       });
     } else {
       press(card, card.dataset.burst || '', () => track(card.dataset.link));
+      card.addEventListener('auxclick', e => { if (e.button === 1) track(card.dataset.link); });
     }
   });
   press(ageGo, '🍓', () => { track('onlyfans'); setTimeout(closeAge, 500); });
-  document.querySelectorAll('.soc').forEach(a => a.addEventListener('click', () => track(a.dataset.link)));
+  document.querySelectorAll('.soc').forEach(a => {
+    a.addEventListener('click', () => track(a.dataset.link));
+    a.addEventListener('auxclick', e => { if (e.button === 1) track(a.dataset.link); });
+  });
 })();
